@@ -18,7 +18,7 @@ public class menu {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
 
-        JLabel title = new JLabel("Landing Page");
+        JLabel title = new JLabel("Messenger");
         title.setFont(new Font("Sans Serif", Font.BOLD, 36));
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setVerticalAlignment(JLabel.TOP);
@@ -31,23 +31,12 @@ public class menu {
 
         JPanel cards = new JPanel(new CardLayout());
 
-        JPanel homePanel = new JPanel();
-        homePanel.add(new JLabel("Home"));
-
-        JPanel contactsPanel = new JPanel();
-        contactsPanel.add(new JLabel("Contacts"));
-
-        JPanel searchPanel = new JPanel();
-        searchPanel.add(new JLabel("Search"));
-
-        JPanel newChatPanel = new JPanel();
-        newChatPanel.add(new JLabel("New Chat"));
-
-        JPanel editProfilePanel = new JPanel();
-        editProfilePanel.add(new JLabel("Edit Profile"));
-
-        JPanel savePanel = new JPanel();
-        savePanel.add(new JLabel("Save/Load"));
+        JPanel homePanel = new HomePage();
+        JPanel contactsPanel = new ContactsPage();
+        JPanel searchPanel = new SearchPage();
+        JPanel newChatPanel = new NewChatPage();
+        JPanel editProfilePanel = new EditProfilePage();
+        JPanel savePanel = new SaveLoadPage();
 
         cards.add(homePanel, "Home");
         cards.add(contactsPanel, "Contacts");
