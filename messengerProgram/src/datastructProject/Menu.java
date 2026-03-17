@@ -7,10 +7,10 @@ import java.awt.event.*;
 
 import java.io.IOException;
 
-public class menu {
+public class Menu {
     private JFrame frame;
 
-    public menu() throws IOException {
+    public Menu() throws IOException {
         frame = new JFrame("Text");
 
         frame.setSize(1000, 1000);
@@ -68,7 +68,7 @@ public class menu {
         frame.setVisible(true);
     }
     public static void main(String[] args) throws IOException {
-        menu menu = new menu();
+        Menu menu = new Menu();
         menu.show();
     }
 }
