@@ -2,6 +2,9 @@ package datastructProject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class ContactsPage extends JPanel {
 
@@ -27,10 +30,14 @@ public class ContactsPage extends JPanel {
         JButton alphabeticalOrder = new JButton("Sort alphabetically");
         alphabeticalOrder.addActionListener(e -> sortByAlphabeticalOrder());
 
+        JButton sortDefault = new JButton("Sort default");
+        sortDefault.addActionListener(e -> refreshList(new ArrayList<>(contactManager.getAllContacts().values())));
+
         JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonBar.add(addContactButton);
         buttonBar.add(mostRecentlyActive);
         buttonBar.add(alphabeticalOrder);
+        buttonBar.add(sortDefault);
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(title, BorderLayout.NORTH);
@@ -43,6 +50,9 @@ public class ContactsPage extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, BorderLayout.CENTER);
+
+        // Populate the list immediately (covers contacts loaded from a file)
+        refreshList(new ArrayList<>(contactManager.getAllContacts().values()));
     }
     
     /** Adds a single row for the given contact into the scrollable list. */
@@ -100,16 +110,33 @@ public class ContactsPage extends JPanel {
 
             Contact newContact = new Contact(name, phone, "");
             contactManager.addContact(newContact);
-            addContactRow(newContact);
+            refreshList(new ArrayList<>(contactManager.getAllContacts().values()));
         }
     }
 
-    private void sortByMostRecent(){
 
+    private void sortByMostRecent() {
+        // i will finish this once the message system has been implemented as that will have the time of message sent
     }
 
-    private void sortByAlphabeticalOrder(){
+    private void sortByAlphabeticalOrder() {
+        // Get all contacts, sort by name A→Z, then refresh the panel
+        List<Contact> sorted = new ArrayList<>(contactManager.getAllContacts().values());
+        sorted.sort(Comparator.comparing(c -> c.getName().toLowerCase()));
+        refreshList(sorted);
+    }
 
+    /**
+     * Clears the contact list panel and redraws it using the provided ordered list.
+     * Call this whenever you want to change what is displayed or in what order.
+     */
+    private void refreshList(List<Contact> contacts) {
+        contactListPanel.removeAll();
+        for (Contact contact : contacts) {
+            addContactRow(contact);
+        }
+        contactListPanel.revalidate();
+        contactListPanel.repaint();
     }
 }
 
