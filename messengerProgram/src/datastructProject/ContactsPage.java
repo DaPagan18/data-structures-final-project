@@ -57,23 +57,19 @@ public class ContactsPage extends JPanel {
     
     /** Adds a single row for the given contact into the scrollable list. */
     private void addContactRow(Contact contact) {
-        JPanel row = new JPanel(new BorderLayout());
-        row.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
+        JButton row = new JButton(contact.getName() + "  —  " + contact.getPhoneNumber());
+        row.setHorizontalAlignment(SwingConstants.LEFT);
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-
-        JLabel nameLabel = new JLabel(contact.getName());
-        nameLabel.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
-
-        JLabel phoneLabel = new JLabel(contact.getPhoneNumber());
-        phoneLabel.setForeground(Color.GRAY);
-        phoneLabel.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
-
-        row.add(nameLabel, BorderLayout.WEST);
-        row.add(phoneLabel, BorderLayout.EAST);
+        row.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
+        row.addActionListener(e -> openContactProfile(contact));
 
         contactListPanel.add(row);
         contactListPanel.revalidate();
         contactListPanel.repaint();
+    }
+
+    private void openContactProfile(Contact contact) {
+        //not finished
     }
 
     /**
