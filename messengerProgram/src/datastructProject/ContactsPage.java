@@ -128,7 +128,6 @@ public class ContactsPage extends JPanel {
 
     /**
      * Clears the contact list panel and redraws it using the provided ordered list.
-     * Call this whenever you want to change what is displayed or in what order.
      */
     private void refreshList(List<Contact> contacts) {
         contactListPanel.removeAll();
