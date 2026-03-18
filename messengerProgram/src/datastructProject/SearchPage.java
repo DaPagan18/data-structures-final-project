@@ -1,14 +1,333 @@
 package datastructProject;
 
+import java.awt.*;
+import java.awt.event.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 import javax.swing.*;
 
 public class SearchPage extends JPanel {
-    public SearchPage() {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(Box.createVerticalStrut(20));
+    private CardLayout cardLayout;
+    private SearchState searchState;
+    private SearchService searchService;
+    private List<Chat> allChats;
+    private JPanel resultsList;
+    private JTextField searchField;
+    
+    public SearchPage(List<Chat> allChats) {
+        this.allChats = allChats;
+        this.cardLayout = new CardLayout();
+        this.searchState = new SearchState();
+        this.searchService = new SearchService();
         
+        setLayout(cardLayout);
+        
+        // Create search results panel
+        JPanel searchResultsPanel = createSearchResultsPanel();
+        add(searchResultsPanel, "SearchResults");
+        
+        // Show search results by default
+        cardLayout.show(this, "SearchResults");
+    }
+    
+    private JPanel createSearchResultsPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        
+        // Title
         JLabel title = new JLabel("Search");
-        title.setFont(new java.awt.Font("Sans Serif", java.awt.Font.BOLD, 24));
-        add(title);
+        title.setFont(new Font("Sans Serif", Font.BOLD, 24));
+        panel.add(title, BorderLayout.NORTH);
+        
+        // Search input panel
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        searchField = new JTextField(20);
+        JButton searchButton = new JButton("Search");
+        
+        searchPanel.add(new JLabel("Keyword: "));
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        
+        panel.add(searchPanel, BorderLayout.NORTH);
+        
+        // Results panel with scroll
+        JPanel resultsContainer = new JPanel(new BorderLayout());
+        resultsList = new JPanel();
+        resultsList.setLayout(new BoxLayout(resultsList, BoxLayout.Y_AXIS));
+        
+        JScrollPane scrollPane = new JScrollPane(resultsList);
+        resultsContainer.add(scrollPane, BorderLayout.CENTER);
+        
+        // Search button action - uses Stack to save state
+        searchButton.addActionListener(e -> {
+            String keyword = searchField.getText().trim();
+            if (keyword.isEmpty()) {
+                JOptionPane.showMessageDialog(panel, "Please enter a keyword");
+                return;
+            }
+            
+            // Run search
+            List<SearchResult> results = searchService.search(keyword, allChats);
+            
+            // Push current state onto Stack before updating
+            searchState.pushSearchState(keyword, results);
+            
+            // Display results
+            displaySearchResults(results, keyword);
+        });
+        
+        // Allow search on Enter key
+        searchField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    searchButton.doClick();
+                }
+            }
+        });
+        
+        panel.add(resultsContainer, BorderLayout.CENTER);
+        
+        return panel;
+    }
+    
+    private void displaySearchResults(List<SearchResult> results, String keyword) {
+        // Clear previous results
+        resultsList.removeAll();
+        
+        if (results.isEmpty()) {
+            JLabel noResults = new JLabel("No results found for: \"" + keyword + "\"");
+            noResults.setFont(new Font("Sans Serif", Font.ITALIC, 14));
+            noResults.setAlignmentX(Component.LEFT_ALIGNMENT);
+            resultsList.add(noResults);
+        } else {
+            // Display results
+            for (SearchResult result : results) {
+                JButton resultButton = createResultButton(result);
+                resultsList.add(resultButton);
+                resultsList.add(Box.createVerticalStrut(5));
+            }
+        }
+        
+        resultsList.revalidate();
+        resultsList.repaint();
+    }
+    
+    private JButton createResultButton(SearchResult result) {
+        JButton button = new JButton();
+        button.setLayout(new BorderLayout());
+        button.setAlignmentX(Component.LEFT_ALIGNMENT);
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        
+        // Result info panel
+        JPanel infoPanel = new JPanel(new BorderLayout());
+        infoPanel.setBackground(new Color(240, 240, 240));
+        
+        // Chat name and message preview
+        JLabel chatName = new JLabel("Chat: " + result.chat.chatName);
+        chatName.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        
+        String preview = result.message.content;
+        if (preview.length() > 60) {
+            preview = preview.substring(0, 60) + "...";
+        }
+        JLabel messagePreview = new JLabel(preview);
+        messagePreview.setFont(new Font("Sans Serif", Font.PLAIN, 11));
+        
+        infoPanel.add(chatName, BorderLayout.NORTH);
+        infoPanel.add(messagePreview, BorderLayout.CENTER);
+        
+        button.add(infoPanel, BorderLayout.CENTER);
+        
+        // Action: open chat when clicked
+        button.addActionListener(e -> {
+            openChatScreen(result.chat, result.message);
+        });
+        
+        return button;
+    }
+    
+    private void openChatScreen(Chat chat, Message messageId) {
+        // Remove previous chat screen if exists
+        for (Component comp : getComponents()) {
+            if (comp instanceof ChatScreen) {
+                remove(comp);
+            }
+        }
+        
+        // Create and add new chat screen
+        ChatScreen chatScreen = new ChatScreen(chat, messageId, () -> {
+            // Back button callback: pop from Stack and restore previous search state
+            if (searchState.canGoBack()) {
+                SearchStateSnapshot previousState = searchState.popSearchState();
+                searchField.setText(previousState.keyword);
+                displaySearchResults(previousState.results, previousState.keyword);
+            }
+            cardLayout.show(SearchPage.this, "SearchResults");
+        });
+        add(chatScreen, chat.chatId);
+        
+        // Show chat screen
+        cardLayout.show(this, chat.chatId);
+    }
+}
+
+class Chat {
+    String chatId;
+    String chatName;
+    List<Message> messages;
+    
+    public Chat(String chatId, String chatName) {
+        this.chatId = chatId;
+        this.chatName = chatName;
+        this.messages = new ArrayList<>();
+    }
+}
+
+class Message {
+    String messageId;
+    String chatId;
+    String sender;
+    String content;
+    LocalDateTime timestamp;
+    
+    public Message(String messageId, String chatId, String sender, String content, LocalDateTime timestamp) {
+        this.messageId = messageId;
+        this.chatId = chatId;
+        this.sender = sender;
+        this.content = content;
+        this.timestamp = timestamp;
+    }
+}
+
+class SearchState {
+    private Stack<SearchStateSnapshot> searchHistory;
+    
+    public SearchState() {
+        this.searchHistory = new Stack<>();
+    }
+    
+    public void pushSearchState(String keyword, List<SearchResult> results) {
+        searchHistory.push(new SearchStateSnapshot(keyword, new ArrayList<>(results)));
+    }
+    
+    public SearchStateSnapshot popSearchState() {
+        if (!searchHistory.isEmpty()) {
+            return searchHistory.pop();
+        }
+        return null;
+    }
+    
+    public boolean canGoBack() {
+        return !searchHistory.isEmpty();
+    }
+    
+    public SearchStateSnapshot peekCurrentState() {
+        if (!searchHistory.isEmpty()) {
+            return searchHistory.peek();
+        }
+        return null;
+    }
+    
+    public int getHistorySize() {
+        return searchHistory.size();
+    }
+}
+
+class SearchStateSnapshot {
+    public String keyword;
+    public List<SearchResult> results;
+    
+    public SearchStateSnapshot(String keyword, List<SearchResult> results) {
+        this.keyword = keyword;
+        this.results = results;
+    }
+}
+
+class SearchService {
+    List<SearchResult> search(String keyword, List<Chat> allChats) {
+        List<SearchResult> results = new ArrayList<>();
+
+        for (Chat chat : allChats) {
+            for (Message msg : chat.messages) {
+                if (msg.content.toLowerCase().contains(keyword.toLowerCase())) {
+                    results.add(new SearchResult(chat, msg));
+                }
+            }
+        }
+        return results;
+    }
+}
+
+class SearchResult {
+    Chat chat;
+    Message message;
+    
+    public SearchResult(Chat chat, Message message) {
+        this.chat = chat;
+        this.message = message;
+    }
+}
+
+class ChatScreen extends JPanel {
+    private Chat chat;
+    private Message highlightedMessage;
+    private Runnable onBack;
+    
+    public ChatScreen(Chat chat, Message highlightedMessage, Runnable onBack) {
+        this.chat = chat;
+        this.highlightedMessage = highlightedMessage;
+        this.onBack = onBack;
+        
+        setLayout(new BorderLayout());
+        
+        // Header with back button
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        JButton backButton = new JButton("← Back");
+        backButton.addActionListener(e -> onBack.run());
+        
+        JLabel chatTitle = new JLabel(chat.chatName);
+        chatTitle.setFont(new Font("Sans Serif", Font.BOLD, 18));
+        
+        headerPanel.add(backButton, BorderLayout.WEST);
+        headerPanel.add(chatTitle, BorderLayout.CENTER);
+        add(headerPanel, BorderLayout.NORTH);
+        
+        // Messages panel
+        JPanel messagesPanel = new JPanel();
+        messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
+        
+        for (Message msg : chat.messages) {
+            JPanel messageItem = new JPanel();
+            messageItem.setLayout(new BorderLayout());
+            messageItem.setAlignmentX(Component.LEFT_ALIGNMENT);
+            messageItem.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+            messageItem.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            
+            // Highlight the message that was searched
+            if (msg.messageId.equals(highlightedMessage.messageId)) {
+                messageItem.setBackground(new Color(255, 255, 200));
+                messageItem.setOpaque(true);
+            }
+            
+            JLabel sender = new JLabel(msg.sender);
+            sender.setFont(new Font("Sans Serif", Font.BOLD, 12));
+            
+            JLabel content = new JLabel(msg.content);
+            content.setFont(new Font("Sans Serif", Font.PLAIN, 11));
+            
+            JLabel timestamp = new JLabel(msg.timestamp.toString());
+            timestamp.setFont(new Font("Sans Serif", Font.ITALIC, 10));
+            
+            messageItem.add(sender, BorderLayout.NORTH);
+            messageItem.add(content, BorderLayout.CENTER);
+            messageItem.add(timestamp, BorderLayout.EAST);
+            
+            messagesPanel.add(messageItem);
+        }
+        
+        JScrollPane scrollPane = new JScrollPane(messagesPanel);
+        add(scrollPane, BorderLayout.CENTER);
     }
 }
