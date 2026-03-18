@@ -5,27 +5,22 @@
  */
 package datastructProject;
 
-import java.util.HashMap;
-
 public class Contact {
-    
+
     private String name;
     private String phoneNumber;
     private String profilePicPath;
-    private HashMap<String, Contact> contactsByNumber;
 
-    public Contact(){
+    public Contact() {
         name = "";
         phoneNumber = "";
         profilePicPath = "";
-        contactsByNumber = new HashMap<>();
     }
 
-    public Contact(String name, String phoneNumber, String profilePicPath){
+    public Contact(String name, String phoneNumber, String profilePicPath) {
         this.name = name;
+        this.phoneNumber = phoneNumber;
         this.profilePicPath = profilePicPath;
-        this.profilePicPath = profilePicPath;
-        contactsByNumber = new HashMap<>();
     }
 
     public String getName() {
@@ -51,15 +46,4 @@ public class Contact {
     public void setProfilePicPath(String profilePicPath) {
         this.profilePicPath = profilePicPath;
     }
-
-    public Contact getContactsByUsername(String name) {
-        return contactsByNumber.get(name);
-    }
-
-    public void addContact(Contact contact){
-        contactsByNumber.put(contact.getPhoneNumber(), contact);
-    }
-
-    
-
 }
