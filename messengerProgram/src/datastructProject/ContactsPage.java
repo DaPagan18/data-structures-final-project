@@ -1,3 +1,8 @@
+/**
+ * Manages the collection of contacts for the messenger program.
+ *
+ * @author Calum Davies
+ */
 package datastructProject;
 
 import javax.swing.*;
