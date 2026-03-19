@@ -1,5 +1,5 @@
 /**
- * Manages the collection of contacts for the messenger program.
+ * The contact page for the messenger program
  *
  * @author Calum Davies
  */
