@@ -15,13 +15,13 @@ import java.util.Stack;
 import javax.swing.*;
 
 public class SearchPage extends JPanel {
-    private CardLayout cardLayout;
-    private SearchState searchState;
-    private SearchService searchService;
-    private List<Chat> allChats;
+    private final CardLayout cardLayout;
+    private final SearchState searchState;
+    private final SearchService searchService;
+    private final List<Chat> allChats;
     private JPanel resultsList;
     private JTextField searchField;
-    private ChatManager chatManager;
+    private final ChatManager chatManager;
     
     public SearchPage(List<Chat> allChats, ChatManager chatManager) {
         this.allChats = allChats;
@@ -193,7 +193,7 @@ public class SearchPage extends JPanel {
 }
 
 class SearchState {
-    private Stack<SearchStateSnapshot> searchHistory;
+    private final Stack<SearchStateSnapshot> searchHistory;
     
     public SearchState() {
         this.searchHistory = new Stack<>();
@@ -263,9 +263,9 @@ class SearchResult {
 }
 
 class ChatScreen extends JPanel {
-    private Chat chat;
+    private final Chat chat;
     private ChatManager chatManager;
-    private Runnable onBack;
+    private final Runnable onBack;
     
     public ChatScreen(Chat chat, ChatManager chatManager, Runnable onBack) {
         this.chat = chat;
@@ -347,5 +347,13 @@ class ChatScreen extends JPanel {
         
         JScrollPane scrollPane = new JScrollPane(messagesPanel);
         add(scrollPane, BorderLayout.CENTER);
+    }
+
+    public ChatManager getChatManager() {
+        return chatManager;
+    }
+
+    public void setChatManager(ChatManager chatManager) {
+        this.chatManager = chatManager;
     }
 }

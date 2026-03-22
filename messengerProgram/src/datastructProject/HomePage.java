@@ -5,10 +5,10 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 
 public class HomePage extends JPanel {
-    private ChatManager chatManager;
+    private final ChatManager chatManager;
     private Runnable onBackHome;
-    private ChatOpenListener onChatOpen;
-    private JPanel chatsListPanel;
+    private final ChatOpenListener onChatOpen;
+    private final JPanel chatsListPanel;
 
     @FunctionalInterface
     public interface ChatOpenListener {

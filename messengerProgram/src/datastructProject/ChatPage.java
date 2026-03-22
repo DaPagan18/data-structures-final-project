@@ -5,17 +5,17 @@
  */
 package datastructProject;
 
-import javax.swing.*;
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javax.swing.*;
 
 public class ChatPage extends JPanel {
     private Chat currentChat;
-    private ChatManager chatManager;
-    private JPanel messagesPanel;
+    private final ChatManager chatManager;
+    private final JPanel messagesPanel;
     private JTextArea messageInput;
-    private Runnable onBackHome;
+    private final Runnable onBackHome;
     private JLabel chatTitleLabel;
 
     public ChatPage(Chat chat, ChatManager chatManager, Runnable onBackHome) {
