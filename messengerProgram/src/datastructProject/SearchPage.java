@@ -1,8 +1,14 @@
+/**
+ * Handles search functionality for finding messages within chats.
+ * Implements a search state management system using a Stack to allow users to navigate back through previous search results.
+ *
+ * @author Daniel Pagan
+ */
+
 package datastructProject;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -15,9 +21,11 @@ public class SearchPage extends JPanel {
     private List<Chat> allChats;
     private JPanel resultsList;
     private JTextField searchField;
+    private ChatManager chatManager;
     
-    public SearchPage(List<Chat> allChats) {
+    public SearchPage(List<Chat> allChats, ChatManager chatManager) {
         this.allChats = allChats;
+        this.chatManager = chatManager;
         this.cardLayout = new CardLayout();
         this.searchState = new SearchState();
         this.searchService = new SearchService();
@@ -63,12 +71,17 @@ public class SearchPage extends JPanel {
         searchButton.addActionListener(e -> {
             String keyword = searchField.getText().trim();
             if (keyword.isEmpty()) {
-                JOptionPane.showMessageDialog(panel, "Please enter a keyword");
+                JOptionPane.showMessageDialog(panel, "Please enter a keyword to search");
                 return;
             }
             
-            // Run search
+            // Run search through messages
             List<SearchResult> results = searchService.search(keyword, allChats);
+            
+            if (results.isEmpty()) {
+                JOptionPane.showMessageDialog(panel, "No messages found containing: \"" + keyword + "\"");
+                return;
+            }
             
             // Push current state onto Stack before updating
             searchState.pushSearchState(keyword, results);
@@ -118,37 +131,48 @@ public class SearchPage extends JPanel {
         JButton button = new JButton();
         button.setLayout(new BorderLayout());
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
-        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
         
         // Result info panel
         JPanel infoPanel = new JPanel(new BorderLayout());
         infoPanel.setBackground(new Color(240, 240, 240));
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         
-        // Chat name and message preview
-        JLabel chatName = new JLabel("Chat: " + result.chat.chatName);
+        // Chat name and sender
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topPanel.setBackground(new Color(240, 240, 240));
+        JLabel chatName = new JLabel("Chat: " + result.chat.getContactName());
         chatName.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        JLabel sender = new JLabel(" | From: " + result.message.getFrom());
+        sender.setFont(new Font("Sans Serif", Font.PLAIN, 11));
+        sender.setForeground(new Color(100, 100, 100));
+        topPanel.add(chatName);
+        topPanel.add(sender);
         
-        String preview = result.message.content;
-        if (preview.length() > 60) {
-            preview = preview.substring(0, 60) + "...";
+        // Message content preview
+        String preview = result.message.getMessageContent();
+        if (preview.length() > 80) {
+            preview = preview.substring(0, 80) + "...";
         }
         JLabel messagePreview = new JLabel(preview);
         messagePreview.setFont(new Font("Sans Serif", Font.PLAIN, 11));
+        messagePreview.setForeground(new Color(50, 50, 50));
+        messagePreview.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
         
-        infoPanel.add(chatName, BorderLayout.NORTH);
+        infoPanel.add(topPanel, BorderLayout.NORTH);
         infoPanel.add(messagePreview, BorderLayout.CENTER);
         
         button.add(infoPanel, BorderLayout.CENTER);
         
         // Action: open chat when clicked
         button.addActionListener(e -> {
-            openChatScreen(result.chat, result.message);
+            openChatScreen(result.chat);
         });
         
         return button;
     }
     
-    private void openChatScreen(Chat chat, Message messageId) {
+    private void openChatScreen(Chat chat) {
         // Remove previous chat screen if exists
         for (Component comp : getComponents()) {
             if (comp instanceof ChatScreen) {
@@ -157,47 +181,14 @@ public class SearchPage extends JPanel {
         }
         
         // Create and add new chat screen
-        ChatScreen chatScreen = new ChatScreen(chat, messageId, () -> {
-            // Back button callback: pop from Stack and restore previous search state
-            if (searchState.canGoBack()) {
-                SearchStateSnapshot previousState = searchState.popSearchState();
-                searchField.setText(previousState.keyword);
-                displaySearchResults(previousState.results, previousState.keyword);
-            }
+        ChatScreen chatScreen = new ChatScreen(chat, chatManager, () -> {
+            // Back button callback: show search results again
             cardLayout.show(SearchPage.this, "SearchResults");
         });
-        add(chatScreen, chat.chatId);
+        add(chatScreen, "ChatDetail");
         
         // Show chat screen
-        cardLayout.show(this, chat.chatId);
-    }
-}
-
-class Chat {
-    String chatId;
-    String chatName;
-    List<Message> messages;
-    
-    public Chat(String chatId, String chatName) {
-        this.chatId = chatId;
-        this.chatName = chatName;
-        this.messages = new ArrayList<>();
-    }
-}
-
-class Message {
-    String messageId;
-    String chatId;
-    String sender;
-    String content;
-    LocalDateTime timestamp;
-    
-    public Message(String messageId, String chatId, String sender, String content, LocalDateTime timestamp) {
-        this.messageId = messageId;
-        this.chatId = chatId;
-        this.sender = sender;
-        this.content = content;
-        this.timestamp = timestamp;
+        cardLayout.show(this, "ChatDetail");
     }
 }
 
@@ -248,10 +239,11 @@ class SearchStateSnapshot {
 class SearchService {
     List<SearchResult> search(String keyword, List<Chat> allChats) {
         List<SearchResult> results = new ArrayList<>();
+        String lowerKeyword = keyword.toLowerCase();
 
         for (Chat chat : allChats) {
-            for (Message msg : chat.messages) {
-                if (msg.content.toLowerCase().contains(keyword.toLowerCase())) {
+            for (Message msg : chat.getMessages()) {
+                if (msg.getMessageContent().toLowerCase().contains(lowerKeyword)) {
                     results.add(new SearchResult(chat, msg));
                 }
             }
@@ -272,12 +264,12 @@ class SearchResult {
 
 class ChatScreen extends JPanel {
     private Chat chat;
-    private Message highlightedMessage;
+    private ChatManager chatManager;
     private Runnable onBack;
     
-    public ChatScreen(Chat chat, Message highlightedMessage, Runnable onBack) {
+    public ChatScreen(Chat chat, ChatManager chatManager, Runnable onBack) {
         this.chat = chat;
-        this.highlightedMessage = highlightedMessage;
+        this.chatManager = chatManager;
         this.onBack = onBack;
         
         setLayout(new BorderLayout());
@@ -287,7 +279,7 @@ class ChatScreen extends JPanel {
         JButton backButton = new JButton("← Back");
         backButton.addActionListener(e -> onBack.run());
         
-        JLabel chatTitle = new JLabel(chat.chatName);
+        JLabel chatTitle = new JLabel(chat.getContactName());
         chatTitle.setFont(new Font("Sans Serif", Font.BOLD, 18));
         
         headerPanel.add(backButton, BorderLayout.WEST);
@@ -298,31 +290,57 @@ class ChatScreen extends JPanel {
         JPanel messagesPanel = new JPanel();
         messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
         
-        for (Message msg : chat.messages) {
+        for (Message msg : chat.getMessages()) {
             JPanel messageItem = new JPanel();
             messageItem.setLayout(new BorderLayout());
             messageItem.setAlignmentX(Component.LEFT_ALIGNMENT);
-            messageItem.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
-            messageItem.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            messageItem.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+            messageItem.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
             
-            // Highlight the message that was searched
-            if (msg.messageId.equals(highlightedMessage.messageId)) {
-                messageItem.setBackground(new Color(255, 255, 200));
-                messageItem.setOpaque(true);
-            }
+            // Left side: message content
+            JPanel contentPanel = new JPanel();
+            contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
             
-            JLabel sender = new JLabel(msg.sender);
+            JLabel sender = new JLabel(msg.getFrom());
             sender.setFont(new Font("Sans Serif", Font.BOLD, 12));
+            contentPanel.add(sender);
             
-            JLabel content = new JLabel(msg.content);
+            JLabel content = new JLabel(msg.getMessageContent());
             content.setFont(new Font("Sans Serif", Font.PLAIN, 11));
+            contentPanel.add(content);
             
-            JLabel timestamp = new JLabel(msg.timestamp.toString());
+            JLabel timestamp = new JLabel(msg.getTimeSent().toString());
             timestamp.setFont(new Font("Sans Serif", Font.ITALIC, 10));
+            timestamp.setForeground(Color.GRAY);
+            contentPanel.add(timestamp);
             
-            messageItem.add(sender, BorderLayout.NORTH);
-            messageItem.add(content, BorderLayout.CENTER);
-            messageItem.add(timestamp, BorderLayout.EAST);
+            messageItem.add(contentPanel, BorderLayout.CENTER);
+            
+            // Right side: action buttons
+            JPanel buttonsPanel = new JPanel();
+            buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
+            
+            JButton likeButton = new JButton(msg.isLiked() ? "❤ Liked" : "♡ Like");
+            likeButton.setFont(new Font("Sans Serif", Font.PLAIN, 10));
+            likeButton.addActionListener(e -> {
+                chatManager.likeMessage(chat.getId(), msg.getId());
+                // Refresh: go back and reopen chat to show updated state
+                onBack.run();
+            });
+            buttonsPanel.add(likeButton);
+            
+            JButton deleteButton = new JButton("Delete");
+            deleteButton.setFont(new Font("Sans Serif", Font.PLAIN, 10));
+            deleteButton.setForeground(Color.RED);
+            deleteButton.addActionListener(e -> {
+                chatManager.deleteMessage(chat.getId(), msg.getId());
+                // Refresh: go back and reopen chat to show updated state
+                onBack.run();
+            });
+            buttonsPanel.add(deleteButton);
+            
+            messageItem.add(buttonsPanel, BorderLayout.EAST);
+            messageItem.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             
             messagesPanel.add(messageItem);
         }
