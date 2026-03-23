@@ -21,7 +21,6 @@ public class ContactsPage extends JPanel {
     public ContactsPage() {
         setLayout(new BorderLayout());
 
-        // --- Title + buttons at the top ---
         JLabel title = new JLabel("Your Contacts");
         title.setFont(new Font("Sans Serif", Font.BOLD, 24));
         title.setBorder(BorderFactory.createEmptyBorder(16, 16, 8, 16));
