@@ -15,44 +15,26 @@ public class ChatManager {
     private final HashMap<String, Chat> chats = new HashMap<>();
     private int messageIdCounter = 0;
 
-    /**
-     * Adds a new chat to the manager
-     */
     public void addChat(Chat chat) {
         chats.put(chat.getId(), chat);
     }
 
-    /**
-     * Retrieves a chat by its ID
-     */
     public Chat getChat(String chatId) {
         return chats.get(chatId);
     }
 
-    /**
-     * Deletes an entire chat by its ID
-     */
     public boolean deleteChat(String chatId) {
         return chats.remove(chatId) != null;
     }
 
-    /**
-     * Retrieves all chats
-     */
     public HashMap<String, Chat> getAllChats() {
         return chats;
     }
 
-    /**
-     * Gets all chats as a list
-     */
     public List<Chat> getChatsList() {
         return new ArrayList<>(chats.values());
     }
 
-    /**
-     * Sends a message to a specific chat
-     */
     public boolean sendMessage(String chatId, String from, String messageContent) {
         Chat chat = chats.get(chatId);
         if (chat == null) {
@@ -65,9 +47,6 @@ public class ChatManager {
         return true;
     }
 
-    /**
-     * Deletes a specific message from a chat
-     */
     public boolean deleteMessage(String chatId, String messageId) {
         Chat chat = chats.get(chatId);
         if (chat == null) {
@@ -76,9 +55,6 @@ public class ChatManager {
         return chat.removeMessage(messageId);
     }
 
-    /**
-     * Likes/unlikes a specific message
-     */
     public boolean likeMessage(String chatId, String messageId) {
         Chat chat = chats.get(chatId);
         if (chat == null) {
@@ -90,14 +66,10 @@ public class ChatManager {
             return false;
         }
 
-        // Toggle the liked status
         message.setLiked(!message.isLiked());
         return true;
     }
 
-    /**
-     * Marks a message as read
-     */
     public boolean markMessageAsRead(String chatId, String messageId) {
         Chat chat = chats.get(chatId);
         if (chat == null) {
@@ -113,9 +85,6 @@ public class ChatManager {
         return true;
     }
 
-    /**
-     * Gets all unread messages in a specific chat
-     */
     public List<Message> getUnreadMessages(String chatId) {
         Chat chat = chats.get(chatId);
         if (chat == null) {
@@ -131,9 +100,6 @@ public class ChatManager {
         return unreadMessages;
     }
 
-    /**
-     * Searches for messages containing specific content in a chat
-     */
     public List<Message> searchMessagesInChat(String chatId, String searchTerm) {
         Chat chat = chats.get(chatId);
         if (chat == null) {
@@ -149,9 +115,6 @@ public class ChatManager {
         return results;
     }
 
-    /**
-     * Deletes all messages from a specific chat (keeps the chat)
-     */
     public boolean clearChatHistory(String chatId) {
         Chat chat = chats.get(chatId);
         if (chat == null) {
@@ -161,16 +124,10 @@ public class ChatManager {
         return true;
     }
 
-    /**
-     * Gets the total number of chats
-     */
     public int getChatCount() {
         return chats.size();
     }
 
-    /**
-     * Checks if a chat exists
-     */
     public boolean chatExists(String chatId) {
         return chats.containsKey(chatId);
     }

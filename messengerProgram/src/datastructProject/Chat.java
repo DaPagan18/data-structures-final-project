@@ -6,7 +6,6 @@
 package datastructProject;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Chat {
@@ -14,14 +13,14 @@ public class Chat {
     private String contactName;
     private LocalDateTime timeSent;
     private boolean read;
-    public List<Message> messages;
+    public SimpleLinkedList messages;
 
     public Chat() {
         this.id = "";
         this.contactName = "";
         this.timeSent = LocalDateTime.now();
         this.read = false;
-        this.messages = new ArrayList<>();
+        this.messages = new SimpleLinkedList();
     }
 
     public Chat(String id, String contactName) {
@@ -29,7 +28,7 @@ public class Chat {
         this.contactName = contactName;
         this.timeSent = LocalDateTime.now();
         this.read = false;
-        this.messages = new ArrayList<>();
+        this.messages = new SimpleLinkedList();
     }
 
     public Chat(String id, String contactName, LocalDateTime timeSent) {
@@ -37,10 +36,9 @@ public class Chat {
         this.contactName = contactName;
         this.timeSent = timeSent;
         this.read = false;
-        this.messages = new ArrayList<>();
+        this.messages = new SimpleLinkedList();
     }
 
-    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -74,59 +72,199 @@ public class Chat {
     }
 
     public List<Message> getMessages() {
-        return messages;
+        return messages.getAll();
     }
 
     public void setMessages(List<Message> messages) {
-        this.messages = messages;
+        this.messages = new SimpleLinkedList();
+        for (Message msg : messages) {
+            this.messages.add(msg);
+        }
     }
 
-    /**
-     * Adds a message to the chat
-     */
     public void addMessage(Message message) {
         messages.add(message);
         this.timeSent = LocalDateTime.now();
     }
 
-    /**
-     * Removes a specific message from the chat by message ID
-     */
     public boolean removeMessage(String messageId) {
-        return messages.removeIf(msg -> msg.getId().equals(messageId));
+        return messages.remove(messageId);
     }
 
-    /**
-     * Gets a message by its ID
-     */
     public Message getMessageById(String messageId) {
-        return messages.stream()
-                .filter(msg -> msg.getId().equals(messageId))
-                .findFirst()
-                .orElse(null);
+        return messages.get(messageId);
     }
 
-    /**
-     * Gets the total number of messages in the chat
-     */
     public int getMessageCount() {
         return messages.size();
     }
 
-    /**
-     * Clears all messages from the chat
-     */
     public void clearAllMessages() {
         messages.clear();
     }
 
-    /**
-     * Gets the most recent message
-     */
     public Message getLastMessage() {
-        if (messages.isEmpty()) {
+        return messages.getLast();
+    }
+}
+
+class LinkedListNode {
+    private Message message;
+    private LinkedListNode next;
+    
+    public LinkedListNode(Message message) {
+        this.message = message;
+        this.next = null;
+    }
+    
+    public Message getMessage() {
+        return message;
+    }
+    
+    public void setMessage(Message message) {
+        this.message = message;
+    }
+    
+    public LinkedListNode getNext() {
+        return next;
+    }
+    
+    public void setNext(LinkedListNode next) {
+        this.next = next;
+    }
+}
+
+class SimpleLinkedList implements Iterable<Message> {
+    private LinkedListNode head;
+    private int size;
+    
+    public SimpleLinkedList() {
+        this.head = null;
+        this.size = 0;
+    }
+    
+    public void add(Message message) {
+        LinkedListNode newNode = new LinkedListNode(message);
+        
+        if (head == null) {
+            head = newNode;
+        } else {
+            LinkedListNode current = head;
+            while (current.getNext() != null) {
+                current = current.getNext();
+            }
+            current.setNext(newNode);
+        }
+        size++;
+    }
+    
+    public boolean remove(String messageId) {
+        if (head == null) {
+            return false;
+        }
+        
+        if (head.getMessage().getId().equals(messageId)) {
+            head = head.getNext();
+            size--;
+            return true;
+        }
+        
+        LinkedListNode current = head;
+        while (current.getNext() != null) {
+            if (current.getNext().getMessage().getId().equals(messageId)) {
+                current.setNext(current.getNext().getNext());
+                size--;
+                return true;
+            }
+            current = current.getNext();
+        }
+        
+        return false;
+    }
+    
+    public Message get(String messageId) {
+        LinkedListNode current = head;
+        while (current != null) {
+            if (current.getMessage().getId().equals(messageId)) {
+                return current.getMessage();
+            }
+            current = current.getNext();
+        }
+        return null;
+    }
+    
+    public List<Message> getAll() {
+        List<Message> messages = new java.util.ArrayList<>();
+        LinkedListNode current = head;
+        while (current != null) {
+            messages.add(current.getMessage());
+            current = current.getNext();
+        }
+        return messages;
+    }
+    
+    public List<Message> search(String keyword) {
+        List<Message> results = new java.util.ArrayList<>();
+        String lowerKeyword = keyword.toLowerCase();
+        LinkedListNode current = head;
+        
+        while (current != null) {
+            Message msg = current.getMessage();
+            if (msg.getMessageContent().toLowerCase().contains(lowerKeyword)) {
+                results.add(msg);
+            }
+            current = current.getNext();
+        }
+        
+        return results;
+    }
+    
+    public int size() {
+        return size;
+    }
+    
+    public Message getLast() {
+        if (head == null) {
             return null;
         }
-        return messages.get(messages.size() - 1);
+        LinkedListNode current = head;
+        while (current.getNext() != null) {
+            current = current.getNext();
+        }
+        return current.getMessage();
+    }
+    
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
+    public void clear() {
+        head = null;
+        size = 0;
+    }
+    
+    @Override
+    public java.util.Iterator<Message> iterator() {
+        return new LinkedListIterator(head);
+    }
+    
+    private static class LinkedListIterator implements java.util.Iterator<Message> {
+        private LinkedListNode current;
+        
+        public LinkedListIterator(LinkedListNode head) {
+            this.current = head;
+        }
+        
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+        
+        @Override
+        public Message next() {
+            Message message = current.getMessage();
+            current = current.getNext();
+            return message;
+        }
     }
 }
