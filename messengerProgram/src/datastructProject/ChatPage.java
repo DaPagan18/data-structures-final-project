@@ -25,22 +25,18 @@ public class ChatPage extends JPanel {
         
         setLayout(new BorderLayout());
         
-        // Header with title and back button
         JPanel headerPanel = createHeaderPanel();
         add(headerPanel, BorderLayout.NORTH);
         
-        // Chat messages display
         JScrollPane messagesScrollPane = new JScrollPane();
         messagesPanel = new JPanel();
         messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
         messagesScrollPane.setViewportView(messagesPanel);
         add(messagesScrollPane, BorderLayout.CENTER);
         
-        // Message input panel
         JPanel inputPanel = createInputPanel();
         add(inputPanel, BorderLayout.SOUTH);
         
-        // Load and display chat messages
         loadChatMessages();
     }
     
@@ -126,16 +122,13 @@ public class ChatPage extends JPanel {
         
         boolean isFromMe = message.getFrom().equals("You");
         
-        // Message content
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         
-        // Sender label
         JLabel senderLabel = new JLabel(message.getFrom());
         senderLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         contentPanel.add(senderLabel);
         
-        // Message text
         JTextArea messageText = new JTextArea(message.getMessageContent());
         messageText.setEditable(false);
         messageText.setLineWrap(true);
@@ -144,7 +137,6 @@ public class ChatPage extends JPanel {
         messageText.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         contentPanel.add(messageText);
         
-        // Timestamp
         JLabel timeLabel = new JLabel(message.getTimeSent().format(formatter));
         timeLabel.setFont(new Font("Sans Serif", Font.ITALIC, 10));
         timeLabel.setForeground(Color.GRAY);
@@ -152,11 +144,9 @@ public class ChatPage extends JPanel {
         
         messagePanel.add(contentPanel, BorderLayout.CENTER);
         
-        // Action buttons (like and delete)
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
         
-        // Like button
         JButton likeButton = new JButton(message.isLiked() ? "❤ Liked" : "♡ Like");
         likeButton.setFont(new Font("Sans Serif", Font.PLAIN, 10));
         likeButton.addActionListener(e -> {
@@ -165,7 +155,6 @@ public class ChatPage extends JPanel {
         });
         buttonsPanel.add(likeButton);
         
-        // Delete button
         JButton deleteButton = new JButton("Delete");
         deleteButton.setFont(new Font("Sans Serif", Font.PLAIN, 10));
         deleteButton.setForeground(Color.RED);

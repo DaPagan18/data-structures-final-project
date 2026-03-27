@@ -32,23 +32,19 @@ public class SearchPage extends JPanel {
         
         setLayout(cardLayout);
         
-        // Create search results panel
         JPanel searchResultsPanel = createSearchResultsPanel();
         add(searchResultsPanel, "SearchResults");
         
-        // Show search results by default
         cardLayout.show(this, "SearchResults");
     }
     
     private JPanel createSearchResultsPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         
-        // Title
         JLabel title = new JLabel("Search");
         title.setFont(new Font("Sans Serif", Font.BOLD, 24));
         panel.add(title, BorderLayout.NORTH);
         
-        // Search input panel
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchField = new JTextField(20);
         JButton searchButton = new JButton("Search");
@@ -59,7 +55,6 @@ public class SearchPage extends JPanel {
         
         panel.add(searchPanel, BorderLayout.NORTH);
         
-        // Results panel with scroll
         JPanel resultsContainer = new JPanel(new BorderLayout());
         resultsList = new JPanel();
         resultsList.setLayout(new BoxLayout(resultsList, BoxLayout.Y_AXIS));
@@ -67,7 +62,6 @@ public class SearchPage extends JPanel {
         JScrollPane scrollPane = new JScrollPane(resultsList);
         resultsContainer.add(scrollPane, BorderLayout.CENTER);
         
-        // Search button action - uses Stack to save state
         searchButton.addActionListener(e -> {
             String keyword = searchField.getText().trim();
             if (keyword.isEmpty()) {
@@ -75,7 +69,6 @@ public class SearchPage extends JPanel {
                 return;
             }
             
-            // Run search through messages
             List<SearchResult> results = searchService.search(keyword, allChats);
             
             if (results.isEmpty()) {
@@ -83,14 +76,11 @@ public class SearchPage extends JPanel {
                 return;
             }
             
-            // Push current state onto Stack before updating
             searchState.pushSearchState(keyword, results);
             
-            // Display results
             displaySearchResults(results, keyword);
         });
         
-        // Allow search on Enter key
         searchField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -106,7 +96,6 @@ public class SearchPage extends JPanel {
     }
     
     private void displaySearchResults(List<SearchResult> results, String keyword) {
-        // Clear previous results
         resultsList.removeAll();
         
         if (results.isEmpty()) {
@@ -115,7 +104,6 @@ public class SearchPage extends JPanel {
             noResults.setAlignmentX(Component.LEFT_ALIGNMENT);
             resultsList.add(noResults);
         } else {
-            // Display results
             for (SearchResult result : results) {
                 JButton resultButton = createResultButton(result);
                 resultsList.add(resultButton);
@@ -133,12 +121,10 @@ public class SearchPage extends JPanel {
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
         button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
         
-        // Result info panel
         JPanel infoPanel = new JPanel(new BorderLayout());
         infoPanel.setBackground(new Color(240, 240, 240));
         infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         
-        // Chat name and sender
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.setBackground(new Color(240, 240, 240));
         JLabel chatName = new JLabel("Chat: " + result.chat.getContactName());
@@ -149,7 +135,6 @@ public class SearchPage extends JPanel {
         topPanel.add(chatName);
         topPanel.add(sender);
         
-        // Message content preview
         String preview = result.message.getMessageContent();
         if (preview.length() > 80) {
             preview = preview.substring(0, 80) + "...";
@@ -164,7 +149,6 @@ public class SearchPage extends JPanel {
         
         button.add(infoPanel, BorderLayout.CENTER);
         
-        // Action: open chat when clicked
         button.addActionListener(e -> {
             openChatScreen(result.chat);
         });
@@ -173,21 +157,16 @@ public class SearchPage extends JPanel {
     }
     
     private void openChatScreen(Chat chat) {
-        // Remove previous chat screen if exists
         for (Component comp : getComponents()) {
             if (comp instanceof ChatScreen) {
                 remove(comp);
             }
         }
         
-        // Create and add new chat screen
         ChatScreen chatScreen = new ChatScreen(chat, chatManager, () -> {
-            // Back button callback: show search results again
             cardLayout.show(SearchPage.this, "SearchResults");
         });
         add(chatScreen, "ChatDetail");
-        
-        // Show chat screen
         cardLayout.show(this, "ChatDetail");
     }
 }
@@ -274,7 +253,6 @@ class ChatScreen extends JPanel {
         
         setLayout(new BorderLayout());
         
-        // Header with back button
         JPanel headerPanel = new JPanel(new BorderLayout());
         JButton backButton = new JButton("← Back");
         backButton.addActionListener(e -> onBack.run());
@@ -286,7 +264,6 @@ class ChatScreen extends JPanel {
         headerPanel.add(chatTitle, BorderLayout.CENTER);
         add(headerPanel, BorderLayout.NORTH);
         
-        // Messages panel
         JPanel messagesPanel = new JPanel();
         messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
         
@@ -297,7 +274,6 @@ class ChatScreen extends JPanel {
             messageItem.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
             messageItem.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
             
-            // Left side: message content
             JPanel contentPanel = new JPanel();
             contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
             
@@ -316,7 +292,6 @@ class ChatScreen extends JPanel {
             
             messageItem.add(contentPanel, BorderLayout.CENTER);
             
-            // Right side: action buttons
             JPanel buttonsPanel = new JPanel();
             buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
             
@@ -324,7 +299,6 @@ class ChatScreen extends JPanel {
             likeButton.setFont(new Font("Sans Serif", Font.PLAIN, 10));
             likeButton.addActionListener(e -> {
                 chatManager.likeMessage(chat.getId(), msg.getId());
-                // Refresh: go back and reopen chat to show updated state
                 onBack.run();
             });
             buttonsPanel.add(likeButton);
@@ -334,7 +308,6 @@ class ChatScreen extends JPanel {
             deleteButton.setForeground(Color.RED);
             deleteButton.addActionListener(e -> {
                 chatManager.deleteMessage(chat.getId(), msg.getId());
-                // Refresh: go back and reopen chat to show updated state
                 onBack.run();
             });
             buttonsPanel.add(deleteButton);
