@@ -12,6 +12,10 @@ public class Menu {
 
     //probably going to need something here that loads the profile from the file
     private Profile profile = new Profile();
+    private UserRegistry userRegistry = new UserRegistry();
+    
+    //adding a test profile to the user registry to simulate another user being on the system
+    private Profile testProfile = new Profile("Calum", "075", "");
 
     public Menu() throws IOException {
         frame = new JFrame("Text");
