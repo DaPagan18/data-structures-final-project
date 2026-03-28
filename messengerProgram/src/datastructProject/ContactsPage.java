@@ -159,7 +159,10 @@ public class ContactsPage extends JPanel {
                 return;
             }
 
-            Contact newContact = new Contact(name, phone, "");
+            Profile registeredUser = userRegistry.getProfile(phone);
+            String picPath = registeredUser.getProfilePicPath();
+
+            Contact newContact = new Contact(name, phone, picPath);
             profile.addContact(newContact);
             refreshList(new ArrayList<>(profile.getAllContacts().values()));
         }

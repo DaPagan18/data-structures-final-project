@@ -20,4 +20,8 @@ public class UserRegistry {
         return profilesByPhoneNumber.containsKey(phoneNumber);
     }
 
+    public Profile getProfile(String phoneNumber){
+        return profilesByPhoneNumber.get(phoneNumber);
+    }
+
 }

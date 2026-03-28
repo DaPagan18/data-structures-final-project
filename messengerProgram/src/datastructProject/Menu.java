@@ -16,6 +16,7 @@ public class Menu {
     
     //adding a test profile to the user registry to simulate another user being on the system
     private Profile testProfile = new Profile("Calum", "075", "messengerProgram/src/datastructProject/images/calumProfilePic.png");
+    private Profile testProfile2 = new Profile("Daniel","123","");
     
     public Menu() throws IOException {
 
@@ -40,6 +41,7 @@ public class Menu {
 
         //adding the test profiles to the registry 
         userRegistry.addProfile(testProfile);
+        userRegistry.addProfile(testProfile2);
 
         
         // dropdown menu options
