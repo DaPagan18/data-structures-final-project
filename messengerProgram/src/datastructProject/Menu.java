@@ -15,7 +15,7 @@ public class Menu {
     private UserRegistry userRegistry = new UserRegistry();
     
     //adding a test profile to the user registry to simulate another user being on the system
-    private Profile testProfile = new Profile("Calum", "075", "");
+    private Profile testProfile = new Profile("Calum", "075", "messengerProgram/src/datastructProject/images/calumProfilePic.png");
 
     public Menu() throws IOException {
         frame = new JFrame("Text");
