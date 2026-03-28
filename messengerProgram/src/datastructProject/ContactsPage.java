@@ -24,10 +24,14 @@ public class ContactsPage extends JPanel {
     private ContactProfilePage profilePanel;
     private final JLabel title = new JLabel("Your Contacts");
     private JPanel buttonBar;
-    Profile profile;
 
-    public ContactsPage(Profile profile) {
+    private Profile profile;
+    private UserRegistry userRegistry;
+
+
+    public ContactsPage(Profile profile, UserRegistry userRegistry) {
         this.profile = profile;
+        this.userRegistry = userRegistry;
 
         setLayout(new BorderLayout());
     
@@ -144,6 +148,11 @@ public class ContactsPage extends JPanel {
         if (result == JOptionPane.OK_OPTION) {
             String name = nameField.getText().trim();
             String phone = phoneField.getText().trim();
+
+            if (!userRegistry.lookup(phone)){
+                JOptionPane.showMessageDialog(this, "Sorry this user does not exist inside the registry of users");
+                return;
+            }
 
             if (name.isEmpty() || phone.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Name and phone number cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
