@@ -17,15 +17,19 @@ import javax.imageio.ImageIO;
 public class EditProfilePage extends JPanel {
     Font font = new java.awt.Font("Sans Serif", java.awt.Font.BOLD, 18);
 
-    //were probably going to have to add something here where the users profile loads as just new it creates a new profile each time.
-    Profile profile = new Profile();
-    String fNameText = profile.getName();
-    String sPhoneNumberText = profile.getPhoneNumber();
-    String profilePicPath = profile.getProfilePicPath();
+  
+    Profile profile;
+    String fNameText;
+    String sPhoneNumberText;
+    String profilePicPath;
     
     JLabel profileImageLabel = new JLabel();
 
-    public EditProfilePage() {
+    public EditProfilePage(Profile profile) {
+        this.profile = profile;
+        this.fNameText = profile.getName();
+        this.sPhoneNumberText = profile.getPhoneNumber();
+        this.profilePicPath = profile.getProfilePicPath();
         setLayout(new BorderLayout());
 
         JPanel panel = new JPanel();

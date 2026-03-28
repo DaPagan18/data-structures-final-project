@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ContactsPage extends JPanel {
 
-    private final ContactManager contactManager = new ContactManager();
+
 
     /*  Panel that holds the individual contact rows inside the scroll pane*/
     private final JPanel contactListPanel = new JPanel();
@@ -24,9 +24,13 @@ public class ContactsPage extends JPanel {
     private ContactProfilePage profilePanel;
     private final JLabel title = new JLabel("Your Contacts");
     private JPanel buttonBar;
+    Profile profile;
 
-    public ContactsPage() {
+    public ContactsPage(Profile profile) {
+        this.profile = profile;
+
         setLayout(new BorderLayout());
+    
 
         title.setFont(new Font("Sans Serif", Font.BOLD, 24));
         title.setBorder(BorderFactory.createEmptyBorder(16, 16, 8, 16));
@@ -41,7 +45,7 @@ public class ContactsPage extends JPanel {
         alphabeticalOrder.addActionListener(e -> sortByAlphabeticalOrder());
 
         JButton sortDefault = new JButton("Sort default");
-        sortDefault.addActionListener(e -> refreshList(new ArrayList<>(contactManager.getAllContacts().values())));
+        sortDefault.addActionListener(e -> refreshList(new ArrayList<>(profile.getAllContacts().values())));
 
         buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonBar.add(addContactButton);
@@ -68,7 +72,7 @@ public class ContactsPage extends JPanel {
         contentPanel.add(profilePanel, "profile");
         add(contentPanel, BorderLayout.CENTER);
 
-        refreshList(new ArrayList<>(contactManager.getAllContacts().values()));
+        refreshList(new ArrayList<>(profile.getAllContacts().values()));
     }
     
     /** Adds a single row for the given contact into the scrollable list. */
@@ -125,8 +129,8 @@ public class ContactsPage extends JPanel {
             }
 
             Contact newContact = new Contact(name, phone, "");
-            contactManager.addContact(newContact);
-            refreshList(new ArrayList<>(contactManager.getAllContacts().values()));
+            profile.addContact(newContact);
+            refreshList(new ArrayList<>(profile.getAllContacts().values()));
         }
     }
 
@@ -137,7 +141,7 @@ public class ContactsPage extends JPanel {
 
     private void sortByAlphabeticalOrder() {
         // Get all contacts, sort by name A→Z, then refresh the panel
-        List<Contact> sorted = new ArrayList<>(contactManager.getAllContacts().values());
+        List<Contact> sorted = new ArrayList<>(profile.getAllContacts().values());
         sorted.sort(Comparator.comparing(c -> c.getName().toLowerCase()));
         refreshList(sorted);
     }

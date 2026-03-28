@@ -10,6 +10,9 @@ public class Menu {
     private final ChatManager chatManager;
     private CardLayout cards;
 
+    //probably going to need something here that loads the profile from the file
+    private Profile profile = new Profile();
+
     public Menu() throws IOException {
         frame = new JFrame("Text");
 
@@ -41,9 +44,9 @@ public class Menu {
         }, (chat) -> {
             cards.show(cardPanel, "Chat_" + chat.getId());
         });
-        JPanel contactsPanel = new ContactsPage();
+        JPanel contactsPanel = new ContactsPage(profile);
         JPanel searchPanel = new SearchPage(chatManager.getChatsList(), chatManager);
-        JPanel editProfilePanel = new EditProfilePage();
+        JPanel editProfilePanel = new EditProfilePage(profile);
         JPanel savePanel = new SaveLoadPage();
 
         cardPanel.add(homePanel, "Home");
