@@ -15,14 +15,19 @@ public class ContactsPage extends JPanel {
 
     private final ContactManager contactManager = new ContactManager();
 
-    // Panel that holds the individual contact rows inside the scroll pane
+    /*  Panel that holds the individual contact rows inside the scroll pane*/
     private final JPanel contactListPanel = new JPanel();
+
+    /*used for accessing the contacts profile page */
+    private final CardLayout innerCards = new CardLayout();
+    private final JPanel contentPanel = new JPanel(innerCards);
+    private ContactProfilePage profilePanel;
+    private final JLabel title = new JLabel("Your Contacts");
+    private JPanel buttonBar;
 
     public ContactsPage() {
         setLayout(new BorderLayout());
 
-        // --- Title + buttons at the top ---
-        JLabel title = new JLabel("Your Contacts");
         title.setFont(new Font("Sans Serif", Font.BOLD, 24));
         title.setBorder(BorderFactory.createEmptyBorder(16, 16, 8, 16));
 
@@ -38,7 +43,7 @@ public class ContactsPage extends JPanel {
         JButton sortDefault = new JButton("Sort default");
         sortDefault.addActionListener(e -> refreshList(new ArrayList<>(contactManager.getAllContacts().values())));
 
-        JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonBar.add(addContactButton);
         buttonBar.add(mostRecentlyActive);
         buttonBar.add(alphabeticalOrder);
@@ -49,14 +54,20 @@ public class ContactsPage extends JPanel {
         topPanel.add(buttonBar, BorderLayout.SOUTH);
         add(topPanel, BorderLayout.NORTH);
 
-        // --- Scrollable contact list in the centre ---
         contactListPanel.setLayout(new BoxLayout(contactListPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(contactListPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        add(scrollPane, BorderLayout.CENTER);
 
-        // Populate the list immediately (covers contacts loaded from a file)
+        profilePanel = new ContactProfilePage(() -> {
+            title.setText("Your Contacts");
+            buttonBar.setVisible(true);
+            innerCards.show(contentPanel, "list");
+        });
+        contentPanel.add(scrollPane, "list");
+        contentPanel.add(profilePanel, "profile");
+        add(contentPanel, BorderLayout.CENTER);
+
         refreshList(new ArrayList<>(contactManager.getAllContacts().values()));
     }
     
@@ -66,6 +77,7 @@ public class ContactsPage extends JPanel {
         row.setHorizontalAlignment(SwingConstants.LEFT);
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         row.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
+        
         row.addActionListener(e -> openContactProfile(contact));
 
         contactListPanel.add(row);
@@ -74,7 +86,10 @@ public class ContactsPage extends JPanel {
     }
 
     private void openContactProfile(Contact contact) {
-        //not finished
+        title.setText(contact.getName() + "'s Profile");
+        buttonBar.setVisible(false);        
+        profilePanel.setPage(contact);
+        innerCards.show(contentPanel, "profile");
     }
 
     /**
