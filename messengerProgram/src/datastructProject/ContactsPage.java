@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ContactsPage extends JPanel {
 
-    private final ContactManager contactManager = new ContactManager();
+
 
     /*  Panel that holds the individual contact rows inside the scroll pane*/
     private final JPanel contactListPanel = new JPanel();
@@ -25,8 +25,16 @@ public class ContactsPage extends JPanel {
     private final JLabel title = new JLabel("Your Contacts");
     private JPanel buttonBar;
 
-    public ContactsPage() {
+    private Profile profile;
+    private UserRegistry userRegistry;
+
+
+    public ContactsPage(Profile profile, UserRegistry userRegistry) {
+        this.profile = profile;
+        this.userRegistry = userRegistry;
+
         setLayout(new BorderLayout());
+    
 
         title.setFont(new Font("Sans Serif", Font.BOLD, 24));
         title.setBorder(BorderFactory.createEmptyBorder(16, 16, 8, 16));
@@ -41,7 +49,7 @@ public class ContactsPage extends JPanel {
         alphabeticalOrder.addActionListener(e -> sortByAlphabeticalOrder());
 
         JButton sortDefault = new JButton("Sort default");
-        sortDefault.addActionListener(e -> refreshList(new ArrayList<>(contactManager.getAllContacts().values())));
+        sortDefault.addActionListener(e -> refreshList(new ArrayList<>(profile.getAllContacts().values())));
 
         buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonBar.add(addContactButton);
@@ -59,30 +67,52 @@ public class ContactsPage extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        profilePanel = new ContactProfilePage(() -> {
+        profilePanel = new ContactProfilePage(profile, () -> {
             title.setText("Your Contacts");
             buttonBar.setVisible(true);
+            refreshList(new ArrayList<>(profile.getAllContacts().values()));
             innerCards.show(contentPanel, "list");
         });
         contentPanel.add(scrollPane, "list");
         contentPanel.add(profilePanel, "profile");
         add(contentPanel, BorderLayout.CENTER);
 
-        refreshList(new ArrayList<>(contactManager.getAllContacts().values()));
+        refreshList(new ArrayList<>(profile.getAllContacts().values()));
     }
     
     /** Adds a single row for the given contact into the scrollable list. */
     private void addContactRow(Contact contact) {
-        JButton row = new JButton(contact.getName() + "  —  " + contact.getPhoneNumber());
-        row.setHorizontalAlignment(SwingConstants.LEFT);
-        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-        row.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
-        
-        row.addActionListener(e -> openContactProfile(contact));
+        JPanel rowPanel = new JPanel(new BorderLayout());
+        rowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        rowPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
 
-        contactListPanel.add(row);
+        JButton openButton = new JButton(contact.getName() + "  —  " + contact.getPhoneNumber());
+        openButton.setHorizontalAlignment(SwingConstants.LEFT);
+        openButton.addActionListener(e -> openContactProfile(contact));
+
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(e -> deleteContact(contact));
+
+        rowPanel.add(openButton, BorderLayout.CENTER);
+        rowPanel.add(deleteButton, BorderLayout.EAST);
+
+        contactListPanel.add(rowPanel);
         contactListPanel.revalidate();
         contactListPanel.repaint();
+    }
+
+    private void deleteContact(Contact contact) {
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                "Delete " + contact.getName() + "?",
+                "Confirm Delete",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (result == JOptionPane.YES_OPTION) {
+            profile.removeContact(contact.getPhoneNumber());
+            refreshList(new ArrayList<>(profile.getAllContacts().values()));
+        }
     }
 
     private void openContactProfile(Contact contact) {
@@ -119,14 +149,22 @@ public class ContactsPage extends JPanel {
             String name = nameField.getText().trim();
             String phone = phoneField.getText().trim();
 
+            if (!userRegistry.lookup(phone)){
+                JOptionPane.showMessageDialog(this, "Sorry this user does not exist inside the registry of users");
+                return;
+            }
+
             if (name.isEmpty() || phone.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Name and phone number cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            Contact newContact = new Contact(name, phone, "");
-            contactManager.addContact(newContact);
-            refreshList(new ArrayList<>(contactManager.getAllContacts().values()));
+            Profile registeredUser = userRegistry.getProfile(phone);
+            String picPath = registeredUser.getProfilePicPath();
+
+            Contact newContact = new Contact(name, phone, picPath);
+            profile.addContact(newContact);
+            refreshList(new ArrayList<>(profile.getAllContacts().values()));
         }
     }
 
@@ -137,7 +175,7 @@ public class ContactsPage extends JPanel {
 
     private void sortByAlphabeticalOrder() {
         // Get all contacts, sort by name A→Z, then refresh the panel
-        List<Contact> sorted = new ArrayList<>(contactManager.getAllContacts().values());
+        List<Contact> sorted = new ArrayList<>(profile.getAllContacts().values());
         sorted.sort(Comparator.comparing(c -> c.getName().toLowerCase()));
         refreshList(sorted);
     }

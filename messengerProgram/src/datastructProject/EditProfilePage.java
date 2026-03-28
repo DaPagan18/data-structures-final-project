@@ -16,12 +16,20 @@ import javax.imageio.ImageIO;
 
 public class EditProfilePage extends JPanel {
     Font font = new java.awt.Font("Sans Serif", java.awt.Font.BOLD, 18);
-    String aboutInputText = "";
-    String fNameText = "John";
-    String sNameText = "Doe";
+
+  
+    Profile profile;
+    String fNameText;
+    String sPhoneNumberText;
+    String profilePicPath;
+    
     JLabel profileImageLabel = new JLabel();
 
-    public EditProfilePage() {
+    public EditProfilePage(Profile profile) {
+        this.profile = profile;
+        this.fNameText = profile.getName();
+        this.sPhoneNumberText = profile.getPhoneNumber();
+        this.profilePicPath = profile.getProfilePicPath();
         setLayout(new BorderLayout());
 
         JPanel panel = new JPanel();
@@ -32,38 +40,22 @@ public class EditProfilePage extends JPanel {
         profileLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(profileLabel);
 
-        BufferedImage profileImage;
+        String pathToLoad = profilePicPath.isEmpty()
+                ? "messengerProgram/src/datastructProject/images/profilePicture.png"
+                : profilePicPath;
         try {
-            profileImage = ImageIO.read(new File("messengerProgram/src/datastructProject/images/profilePicture.png"));
+            BufferedImage profileImage = ImageIO.read(new File(pathToLoad));
             profileImageLabel = new JLabel(new ImageIcon(profileImage));
-            profileImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            panel.add(profileImageLabel);
         } catch (IOException ex) {
             System.out.println("Error loading image");
         }
+        profileImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(profileImageLabel);
 
         JButton profileButton = new JButton("Edit");
         profileButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         profileButton.addActionListener(e -> changeProfilePicture());
         panel.add(profileButton);
-
-
-        JPanel aboutRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-        JLabel aboutLabel = new JLabel("About:");
-        aboutLabel.setFont(font);
-        aboutRow.add(aboutLabel);
-
-        JLabel aboutText = new JLabel(aboutInputText);
-        aboutRow.add(aboutText);
-
-        JButton aboutButton = new JButton("Edit");
-        aboutButton.addActionListener(e -> { aboutInputText = editComponent("About"); 
-            if (!aboutInputText.isEmpty()) {
-                aboutText.setText(aboutInputText);
-            }
-        });
-        aboutRow.add(aboutButton);
 
         JPanel fNameRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -77,31 +69,32 @@ public class EditProfilePage extends JPanel {
         JButton fNameButton = new JButton("Edit");
         fNameButton.addActionListener(e -> { fNameText = editComponent("First Name");
             if (!fNameText.isEmpty()) {
-                fName.setText(fNameText);
+                profile.setName(fNameText);
+                fName.setText(profile.getName());
             }
         });
         fNameRow.add(fNameButton);
 
-        JPanel sNameRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel sPhoneNumberRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        JLabel sNameLabel = new JLabel("Surname:");
-        sNameLabel.setFont(font);
-        sNameRow.add(sNameLabel);
+        JLabel sPhoneNumberLabel = new JLabel("Phone Number:");
+        sPhoneNumberLabel.setFont(font);
+        sPhoneNumberRow.add(sPhoneNumberLabel);
 
-        JLabel sName = new JLabel(sNameText);
-        sNameRow.add(sName);
+        JLabel sPhoneNumber = new JLabel(sPhoneNumberText);
+        sPhoneNumberRow.add(sPhoneNumber);
 
-        JButton sNameButton = new JButton("Edit");
-        sNameButton.addActionListener(e -> { sNameText = editComponent("Surname");
-            if (!sNameText.isEmpty()) {
-                sName.setText(sNameText);
+        JButton sPhoneNumberButton = new JButton("Edit");
+        sPhoneNumberButton.addActionListener(e -> { sPhoneNumberText = editComponent("Phone Number");
+            if (!sPhoneNumberText.isEmpty()) {
+                profile.setPhoneNumber(sPhoneNumberText);
+                sPhoneNumber.setText(profile.getPhoneNumber());
             }
         });
-        sNameRow.add(sNameButton);
+        sPhoneNumberRow.add(sPhoneNumberButton);
 
-        panel.add(aboutRow);
         panel.add(fNameRow);
-        panel.add(sNameRow);
+        panel.add(sPhoneNumberRow);
 
         add(panel, BorderLayout.CENTER);
     }
@@ -147,6 +140,8 @@ public class EditProfilePage extends JPanel {
         if (result == JFileChooser.APPROVE_OPTION) {
             try {
                 File file = fileChooser.getSelectedFile();
+                profilePicPath = file.getAbsolutePath();
+                profile.setProfilePicPath(profilePicPath);
                 BufferedImage picture = ImageIO.read(file);
                 profileImageLabel.setIcon(new ImageIcon(picture));
             } catch (IOException ex) {

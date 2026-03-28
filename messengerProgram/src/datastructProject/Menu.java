@@ -10,7 +10,17 @@ public class Menu {
     private final ChatManager chatManager;
     private CardLayout cards;
 
+    //probably going to need something here that loads the profile from the file
+    private Profile profile = new Profile();
+    private UserRegistry userRegistry = new UserRegistry();
+    
+    //adding a test profile to the user registry to simulate another user being on the system
+    private Profile testProfile = new Profile("Calum", "075", "messengerProgram/src/datastructProject/images/calumProfilePic.png");
+    private Profile testProfile2 = new Profile("Daniel","123","");
+    
     public Menu() throws IOException {
+
+        
         frame = new JFrame("Text");
 
         frame.setSize(1000, 1000);
@@ -28,6 +38,11 @@ public class Menu {
         // Create ChatManager and sample chats
         this.chatManager = new ChatManager();
         createSampleChats();
+
+        //adding the test profiles to the registry 
+        userRegistry.addProfile(testProfile);
+        userRegistry.addProfile(testProfile2);
+
         
         // dropdown menu options
         String[] pages = {"Home", "Contacts", "Search", "Edit Profile", "Save/Load"};
@@ -41,9 +56,9 @@ public class Menu {
         }, (chat) -> {
             cards.show(cardPanel, "Chat_" + chat.getId());
         });
-        JPanel contactsPanel = new ContactsPage();
+        JPanel contactsPanel = new ContactsPage(profile, userRegistry);
         JPanel searchPanel = new SearchPage(chatManager.getChatsList(), chatManager);
-        JPanel editProfilePanel = new EditProfilePage();
+        JPanel editProfilePanel = new EditProfilePage(profile);
         JPanel savePanel = new SaveLoadPage();
 
         cardPanel.add(homePanel, "Home");
