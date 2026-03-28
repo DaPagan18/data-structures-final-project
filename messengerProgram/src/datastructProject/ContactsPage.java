@@ -63,9 +63,10 @@ public class ContactsPage extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        profilePanel = new ContactProfilePage(() -> {
+        profilePanel = new ContactProfilePage(profile, () -> {
             title.setText("Your Contacts");
             buttonBar.setVisible(true);
+            refreshList(new ArrayList<>(profile.getAllContacts().values()));
             innerCards.show(contentPanel, "list");
         });
         contentPanel.add(scrollPane, "list");
@@ -77,16 +78,37 @@ public class ContactsPage extends JPanel {
     
     /** Adds a single row for the given contact into the scrollable list. */
     private void addContactRow(Contact contact) {
-        JButton row = new JButton(contact.getName() + "  —  " + contact.getPhoneNumber());
-        row.setHorizontalAlignment(SwingConstants.LEFT);
-        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-        row.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
-        
-        row.addActionListener(e -> openContactProfile(contact));
+        JPanel rowPanel = new JPanel(new BorderLayout());
+        rowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        rowPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
 
-        contactListPanel.add(row);
+        JButton openButton = new JButton(contact.getName() + "  —  " + contact.getPhoneNumber());
+        openButton.setHorizontalAlignment(SwingConstants.LEFT);
+        openButton.addActionListener(e -> openContactProfile(contact));
+
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(e -> deleteContact(contact));
+
+        rowPanel.add(openButton, BorderLayout.CENTER);
+        rowPanel.add(deleteButton, BorderLayout.EAST);
+
+        contactListPanel.add(rowPanel);
         contactListPanel.revalidate();
         contactListPanel.repaint();
+    }
+
+    private void deleteContact(Contact contact) {
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                "Delete " + contact.getName() + "?",
+                "Confirm Delete",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (result == JOptionPane.YES_OPTION) {
+            profile.removeContact(contact.getPhoneNumber());
+            refreshList(new ArrayList<>(profile.getAllContacts().values()));
+        }
     }
 
     private void openContactProfile(Contact contact) {
