@@ -11,12 +11,12 @@ public class Menu {
     private CardLayout cards;
 
     //probably going to need something here that loads the profile from the file
-    private Profile profile = new Profile();
-    private UserRegistry userRegistry = new UserRegistry();
+    private final UserRegistry userRegistry = new UserRegistry();
+    private Profile profile = new Profile(userRegistry);
     
     //adding a test profile to the user registry to simulate another user being on the system
-    private Profile testProfile = new Profile("Calum", "075", "messengerProgram/src/datastructProject/images/calumProfilePic.png");
-    private Profile testProfile2 = new Profile("Daniel","123","");
+    private Profile testProfile = new Profile("Calum", "075", "messengerProgram/src/datastructProject/images/calumProfilePic.png", userRegistry);
+    private Profile testProfile2 = new Profile("Daniel","123","", userRegistry);
     
     public Menu() throws IOException {
 
@@ -38,12 +38,7 @@ public class Menu {
         // Create ChatManager and sample chats
         this.chatManager = new ChatManager();
         createSampleChats();
-
-        //adding the test profiles to the registry 
-        userRegistry.addProfile(testProfile);
-        userRegistry.addProfile(testProfile2);
-
-        
+     
         // dropdown menu options
         String[] pages = {"Home", "Contacts", "Search", "Edit Profile", "Save/Load"};
         JComboBox<String> dropdown = new JComboBox<>(pages);
