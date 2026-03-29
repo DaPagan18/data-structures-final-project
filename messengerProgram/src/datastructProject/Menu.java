@@ -92,27 +92,7 @@ public class Menu {
     }
 
     private void createSampleChats() {
-        // Sample Chat 1
-        Chat chat1 = new Chat("chat_001", "Walter White");
-        chat1.addMessage(new Message("msg_001", "chat_001", "Walter W", "Hey, how are you doing today?", LocalDateTime.now().minusHours(2)));
-        chat1.addMessage(new Message("msg_002", "chat_001", "You", "Pretty good! Just finished a project.", LocalDateTime.now().minusHours(1).minusMinutes(45)));
-        chat1.addMessage(new Message("msg_003", "chat_001", "Walter W", "That's awesome! What project were you working on?", LocalDateTime.now().minusHours(1).minusMinutes(30)));
-        chat1.addMessage(new Message("msg_004", "chat_001", "You", "Building a search feature for a messenger application", LocalDateTime.now().minusHours(1)));
-        chatManager.addChat(chat1);
-        
-        // Sample Chat 2
-        Chat chat2 = new Chat("chat_002", "Jon Snow");
-        chat2.addMessage(new Message("msg_005", "chat_002", "Jon S", "Did you see the new Java documentation?", LocalDateTime.now().minusHours(3)));
-        chat2.addMessage(new Message("msg_006", "chat_002", "You", "Not yet, is it good?", LocalDateTime.now().minusHours(2).minusMinutes(50)));
-        chat2.addMessage(new Message("msg_007", "chat_002", "Jon S", "Yes, they explained Swing components really well", LocalDateTime.now().minusHours(2).minusMinutes(30)));
-        chatManager.addChat(chat2);
-        
-        // Sample Chat 3
-        Chat chat3 = new Chat("chat_003", "Tony Soprano");
-        chat3.addMessage(new Message("msg_008", "chat_003", "Tony S", "Let's meet up this weekend?", LocalDateTime.now().minusHours(5)));
-        chat3.addMessage(new Message("msg_009", "chat_003", "You", "Sure! How about Saturday afternoon?", LocalDateTime.now().minusHours(4).minusMinutes(40)));
-        chat3.addMessage(new Message("msg_010", "chat_003", "Tony S", "Perfect! Let's meet at the coffee shop", LocalDateTime.now().minusHours(4)));
-        chatManager.addChat(chat3);
+    
     }
 
     public void show() {

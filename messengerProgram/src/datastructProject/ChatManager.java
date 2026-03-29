@@ -131,4 +131,8 @@ public class ChatManager {
     public boolean chatExists(String chatId) {
         return chats.containsKey(chatId);
     }
+
+    public Chat getOrCreateChatForContact(){
+        
+    }
 }

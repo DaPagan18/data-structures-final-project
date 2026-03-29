@@ -10,33 +10,45 @@ import java.util.List;
 
 public class Chat {
     private String id;
-    private String contactName;
+    private String participant1PhoneNumber;
+    private String participant2PhoneNumber;
     private LocalDateTime timeSent;
     private boolean read;
     public SimpleLinkedList messages;
 
     public Chat() {
         this.id = "";
-        this.contactName = "";
+        this.participant1PhoneNumber = "";
+        this.participant2PhoneNumber = "";
         this.timeSent = LocalDateTime.now();
         this.read = false;
         this.messages = new SimpleLinkedList();
     }
 
-    public Chat(String id, String contactName) {
-        this.id = id;
-        this.contactName = contactName;
+    public Chat(String participant1PhoneNumber, String participant2PhoneNumber) {
+        this.id = generateId(participant1PhoneNumber, participant2PhoneNumber);
+        this.participant1PhoneNumber = participant1PhoneNumber;
+        this.participant2PhoneNumber = participant2PhoneNumber;
         this.timeSent = LocalDateTime.now();
         this.read = false;
         this.messages = new SimpleLinkedList();
     }
 
-    public Chat(String id, String contactName, LocalDateTime timeSent) {
-        this.id = id;
-        this.contactName = contactName;
+    public Chat(LocalDateTime timeSent, String participant1PhoneNumber, String participant2PhoneNumber) {
+        this.id = generateId(participant1PhoneNumber, participant2PhoneNumber);
+        this.participant1PhoneNumber = participant1PhoneNumber;
+        this.participant2PhoneNumber = participant2PhoneNumber;
         this.timeSent = timeSent;
         this.read = false;
         this.messages = new SimpleLinkedList();
+    }
+
+    private static String generateId(String phone1, String phone2){
+        if(phone1.compareTo(phone2) <= 0){
+            return phone1 + "_" + phone2;
+        } else {
+            return phone2 + "_" + phone2;
+        }
     }
 
     public String getId() {
@@ -47,12 +59,20 @@ public class Chat {
         this.id = id;
     }
 
-    public String getContactName() {
-        return contactName;
+    public String getParticipant1PhoneNumber() {
+        return participant1PhoneNumber;
     }
 
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
+    public void setParticipant1PhoneNumber(String participant1PhoneNumber) {
+        this.participant1PhoneNumber = participant1PhoneNumber;
+    }
+
+    public String getParticipant2PhoneNumber() {
+        return participant2PhoneNumber;
+    }
+
+    public void setParticipant2PhoneNumber(String participant2PhoneNumber) {
+        this.participant2PhoneNumber = participant2PhoneNumber;
     }
 
     public LocalDateTime getTimeSent() {
