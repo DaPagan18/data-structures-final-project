@@ -81,7 +81,19 @@ public class Profile {
     }
 
     public boolean removeContact(String phoneNumber) {
-        return contactsByNumber.remove(phoneNumber) != null;
+        boolean removed = contactsByNumber.remove(phoneNumber) != null;
+        
+        if (removed) {
+            ChatManager chatManager = NavigationManager.getInstance().getChatManager();
+            String chatId;
+            if (this.phoneNumber.compareTo(phoneNumber) <= 0) {
+                chatId = this.phoneNumber + "_" + phoneNumber;
+            } else {
+                chatId = phoneNumber + "_" + this.phoneNumber;
+            }
+            chatManager.deleteChat(chatId);
+        }
+        return removed;
     }
 
     public boolean hasContact(String phoneNumber) {
