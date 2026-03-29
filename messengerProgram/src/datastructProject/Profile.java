@@ -15,23 +15,25 @@ public class Profile {
     private final HashMap<String, Contact> contactsByNumber = new HashMap<>();
 
     public Profile(UserRegistry userRegistry) {
-        name = "";
+        this.name = "";
         this.phoneNumber = generateUniquePhoneNumber(userRegistry);
-        profilePicPath = "";
-        
+        this.profilePicPath = "";
+        userRegistry.addProfile(this);
+
     }
 
     public Profile(String name, String profilePicPath, UserRegistry userRegistry){
         this.name = name;
         this.profilePicPath = profilePicPath;
         this.phoneNumber = generateUniquePhoneNumber(userRegistry);
+        userRegistry.addProfile(this);
     }
 
-    public Profile(String name, String phoneNumber, String profilePicPath) {
+    public Profile(String name, String phoneNumber, String profilePicPath, UserRegistry userRegistry) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.profilePicPath = profilePicPath;
- 
+        userRegistry.addProfile(this);
     }
 
 
