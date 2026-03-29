@@ -14,6 +14,7 @@ public class Profile {
     private String profilePicPath;
     private final HashMap<String, Contact> contactsByNumber = new HashMap<>();
 
+    //creates an empty profile ready to be edited
     public Profile(UserRegistry userRegistry) {
         this.name = "";
         this.phoneNumber = generateUniquePhoneNumber(userRegistry);
@@ -22,6 +23,8 @@ public class Profile {
 
     }
 
+  
+    //this contsructor is currently used to create test profiles
     public Profile(String name, String profilePicPath, UserRegistry userRegistry){
         this.name = name;
         this.profilePicPath = profilePicPath;
@@ -29,6 +32,10 @@ public class Profile {
         userRegistry.addProfile(this);
     }
 
+
+    /*this constructor should be able to be used for loading profile/profiles from a save.
+    This is also used to create test profiles used for the demonstration.
+     */
     public Profile(String name, String phoneNumber, String profilePicPath, UserRegistry userRegistry) {
         this.name = name;
         this.phoneNumber = phoneNumber;
