@@ -14,11 +14,17 @@ public class Profile {
     private String profilePicPath;
     private final HashMap<String, Contact> contactsByNumber = new HashMap<>();
 
-    public Profile() {
+    public Profile(UserRegistry userRegistry) {
         name = "";
-        phoneNumber = "";
+        this.phoneNumber = generateUniquePhoneNumber(userRegistry);
         profilePicPath = "";
         
+    }
+
+    public Profile(String name, String profilePicPath, UserRegistry userRegistry){
+        this.name = name;
+        this.profilePicPath = profilePicPath;
+        this.phoneNumber = generateUniquePhoneNumber(userRegistry);
     }
 
     public Profile(String name, String phoneNumber, String profilePicPath) {
@@ -27,6 +33,8 @@ public class Profile {
         this.profilePicPath = profilePicPath;
  
     }
+
+
 
     //getters and setters for profile data
     public String getName() {
@@ -72,6 +80,22 @@ public class Profile {
 
     public HashMap<String, Contact> getAllContacts() {
         return contactsByNumber;
+    }
+
+    private String generateUniquePhoneNumber(UserRegistry userRegistry){
+
+        String phoneNumber;
+
+        do {
+            StringBuilder randPhoneNum = new StringBuilder(10);
+            for (int i = 0; i < 10; i++) {
+                int randNum = (int) (Math.random() * 10);
+                randPhoneNum.append(randNum);
+            }
+            phoneNumber = randPhoneNum.toString();
+        }while(userRegistry.lookup(phoneNumber));
+
+        return phoneNumber;
     }
 
     

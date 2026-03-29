@@ -19,7 +19,7 @@ public class EditProfilePage extends JPanel {
 
   
     Profile profile;
-    String fNameText;
+    String usernameText;
     String sPhoneNumberText;
     String profilePicPath;
     
@@ -27,7 +27,7 @@ public class EditProfilePage extends JPanel {
 
     public EditProfilePage(Profile profile) {
         this.profile = profile;
-        this.fNameText = profile.getName();
+        this.usernameText = profile.getName();
         this.sPhoneNumberText = profile.getPhoneNumber();
         this.profilePicPath = profile.getProfilePicPath();
         setLayout(new BorderLayout());
@@ -57,23 +57,23 @@ public class EditProfilePage extends JPanel {
         profileButton.addActionListener(e -> changeProfilePicture());
         panel.add(profileButton);
 
-        JPanel fNameRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel usernameRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        JLabel fNameLabel = new JLabel("First Name:");
-        fNameLabel.setFont(font);
-        fNameRow.add(fNameLabel);
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setFont(font);
+        usernameRow.add(usernameLabel);
 
-        JLabel fName = new JLabel(fNameText);
-        fNameRow.add(fName);
+        JLabel username = new JLabel(usernameText);
+        usernameRow.add(username);
 
-        JButton fNameButton = new JButton("Edit");
-        fNameButton.addActionListener(e -> { fNameText = editComponent("First Name");
-            if (!fNameText.isEmpty()) {
-                profile.setName(fNameText);
-                fName.setText(profile.getName());
+        JButton usernameButton = new JButton("Edit");
+        usernameButton.addActionListener(e -> { usernameText = editComponent("Username");
+            if (!usernameText.isEmpty()) {
+                profile.setName(usernameText);
+                username.setText(profile.getName());
             }
         });
-        fNameRow.add(fNameButton);
+        usernameRow.add(usernameButton);
 
         JPanel sPhoneNumberRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -84,16 +84,7 @@ public class EditProfilePage extends JPanel {
         JLabel sPhoneNumber = new JLabel(sPhoneNumberText);
         sPhoneNumberRow.add(sPhoneNumber);
 
-        JButton sPhoneNumberButton = new JButton("Edit");
-        sPhoneNumberButton.addActionListener(e -> { sPhoneNumberText = editComponent("Phone Number");
-            if (!sPhoneNumberText.isEmpty()) {
-                profile.setPhoneNumber(sPhoneNumberText);
-                sPhoneNumber.setText(profile.getPhoneNumber());
-            }
-        });
-        sPhoneNumberRow.add(sPhoneNumberButton);
-
-        panel.add(fNameRow);
+        panel.add(usernameRow);
         panel.add(sPhoneNumberRow);
 
         add(panel, BorderLayout.CENTER);
