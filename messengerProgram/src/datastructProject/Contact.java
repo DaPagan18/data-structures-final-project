@@ -57,4 +57,5 @@ public class Contact {
     public String getLastActive(){
         return lastActive;
     }
+
 }

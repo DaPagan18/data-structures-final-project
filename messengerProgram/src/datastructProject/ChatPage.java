@@ -15,13 +15,11 @@ public class ChatPage extends JPanel {
     private final ChatManager chatManager;
     private final JPanel messagesPanel;
     private JTextArea messageInput;
-    private final Runnable onBackHome;
     private JLabel chatTitleLabel;
 
-    public ChatPage(Chat chat, ChatManager chatManager, Runnable onBackHome) {
+    public ChatPage(Chat chat, ChatManager chatManager) {
         this.currentChat = chat;
         this.chatManager = chatManager;
-        this.onBackHome = onBackHome;
         
         setLayout(new BorderLayout());
         
@@ -48,7 +46,7 @@ public class ChatPage extends JPanel {
         // Back button and title
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton backButton = new JButton("← Back to Home");
-        backButton.addActionListener(e -> onBackHome.run());
+        backButton.addActionListener(e -> NavigationManager.getInstance().navigateTo("Home"));
         chatTitleLabel = new JLabel(currentChat.getContactName());
         chatTitleLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
         leftPanel.add(backButton);
@@ -67,7 +65,7 @@ public class ChatPage extends JPanel {
             );
             if (confirm == JOptionPane.YES_OPTION) {
                 chatManager.deleteChat(currentChat.getId());
-                onBackHome.run();
+                NavigationManager.getInstance().navigateTo("Home");
             }
         });
         
@@ -183,7 +181,7 @@ public class ChatPage extends JPanel {
     
     public void updateChat(Chat chat) {
         this.currentChat = chat;
-        chatTitleLabel.setText(currentChat.getContactName());
+        //chatTitleLabel.setText(currentChat.getContactName());
         loadChatMessages();
     }
 }
