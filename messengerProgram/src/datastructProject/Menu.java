@@ -35,9 +35,9 @@ public class Menu {
         title.setBounds(0, 0, 1000, 80);
         frame.add(title);
 
-        // Create ChatManager and sample chats
+        // Create ChatManager
         this.chatManager = new ChatManager();
-        createSampleChats();
+
      
         // dropdown menu options
         String[] pages = {"Home", "Contacts", "Search", "Edit Profile", "Save/Load"};
@@ -45,12 +45,11 @@ public class Menu {
 
         cards = new CardLayout();
         JPanel cardPanel = new JPanel(cards);
+        NavigationManager.getInstance().register(cards, cardPanel);
+        NavigationManager.getInstance().storeChatManager(chatManager);
+        NavigationManager.getInstance().storeUserRegistry(userRegistry, profile.getPhoneNumber());
 
-        JPanel homePanel = new HomePage(chatManager, () -> {
-            cards.show(cardPanel, "Home");
-        }, (chat) -> {
-            cards.show(cardPanel, "Chat_" + chat.getId());
-        });
+        JPanel homePanel = new HomePage(chatManager);
         JPanel contactsPanel = new ContactsPage(profile, userRegistry);
         JPanel searchPanel = new SearchPage(chatManager.getChatsList(), chatManager);
         JPanel editProfilePanel = new EditProfilePage(profile);
@@ -64,9 +63,7 @@ public class Menu {
 
         // Add chat pages dynamically
         for (Chat chat : chatManager.getChatsList()) {
-            ChatPage chatPage = new ChatPage(chat, chatManager, () -> {
-                cards.show(cardPanel, "Home");
-            });
+            ChatPage chatPage = new ChatPage(chat, chatManager);
             cardPanel.add(chatPage, "Chat_" + chat.getId());
         }
 
@@ -91,9 +88,6 @@ public class Menu {
         frame.add(containerPanel, BorderLayout.CENTER);
     }
 
-    private void createSampleChats() {
-    
-    }
 
     public void show() {
         frame.setVisible(true);

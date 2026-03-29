@@ -128,11 +128,23 @@ public class ChatManager {
         return chats.size();
     }
 
-    public boolean chatExists(String chatId) {
-        return chats.containsKey(chatId);
-    }
 
-    public Chat getOrCreateChatForContact(){
-        
+    public Chat getOrCreateChatForContact(String phone1, String phone2){
+        String chatId = "";
+
+        if(phone1.compareTo(phone2) <= 0){
+            chatId = phone1 + "_" + phone2;
+        }else {
+            chatId = phone2 + "_" + phone1;
+        }
+
+        if(chats.containsKey(chatId)){
+            return chats.get(chatId);
+        }else{
+            Chat newChat = new Chat(phone1, phone2);
+            addChat(newChat);
+            return newChat;
+        }
+
     }
 }

@@ -67,7 +67,7 @@ public class ContactsPage extends JPanel {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        profilePanel = new ContactProfilePage(profile, () -> {
+        profilePanel = new ContactProfilePage(profile, NavigationManager.getInstance().getChatManager(), profile.getPhoneNumber(),  () -> {
             title.setText("Your Contacts");
             buttonBar.setVisible(true);
             refreshList(new ArrayList<>(profile.getAllContacts().values()));

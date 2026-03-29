@@ -13,16 +13,26 @@ public class ContactProfilePage extends JPanel {
     private final JLabel profilePicLabel = new JLabel();
     private final Profile profile;
     private Contact currentContact;
+    private ChatManager chatManager;
+    private String currentUserPhone;
 
-    public ContactProfilePage(Profile profile, Runnable onBack) {
+    public ContactProfilePage(Profile profile, ChatManager chatManager, String currentUserPhone, Runnable onBack) {
         this.profile = profile;
+        this.chatManager = chatManager;
+        this.currentUserPhone = currentUserPhone;
+
         setLayout(new BorderLayout());
 
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> onBack.run());
 
+        JButton messageButton = new JButton("Message");
+        messageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        messageButton.addActionListener(e -> openChat());
+
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.add(backButton);
+        topPanel.add(messageButton);
         add(topPanel, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel();
@@ -57,6 +67,14 @@ public class ContactProfilePage extends JPanel {
 
         revalidate();
         repaint();
+    }
+
+    private void openChat(){
+        Chat chat = chatManager.getOrCreateChatForContact(currentUserPhone, currentContact.getPhoneNumber());
+        ChatPage newChatPage = new ChatPage(chat, chatManager);
+
+        NavigationManager.getInstance().registerPage(newChatPage, "Chat_" + chat.getId());
+        NavigationManager.getInstance().navigateTo("Chat_" + chat.getId());
     }
 
   

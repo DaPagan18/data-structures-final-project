@@ -47,7 +47,18 @@ public class Chat {
         if(phone1.compareTo(phone2) <= 0){
             return phone1 + "_" + phone2;
         } else {
-            return phone2 + "_" + phone2;
+            return phone2 + "_" + phone1;
+        }
+    }
+
+    public String getContactName(){
+        UserRegistry userRegistry = NavigationManager.getInstance().getUserRegistry();
+        String currentPhone = NavigationManager.getInstance().getCurrentUserPhone();
+        
+        if(!currentPhone.equals(this.participant1PhoneNumber)){
+            return userRegistry.getProfile(this.participant1PhoneNumber).getName();
+        }else{
+            return userRegistry.getProfile(this.participant2PhoneNumber).getName();
         }
     }
 

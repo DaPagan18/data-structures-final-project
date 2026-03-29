@@ -1,24 +1,17 @@
 package datastructProject;
 
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 
 public class HomePage extends JPanel {
     private final ChatManager chatManager;
-    private Runnable onBackHome;
-    private final ChatOpenListener onChatOpen;
     private final JPanel chatsListPanel;
 
-    @FunctionalInterface
-    public interface ChatOpenListener {
-        void onChatOpened(Chat chat);
-    }
-
-    public HomePage(ChatManager chatManager, Runnable onBackHome, ChatOpenListener onChatOpen) {
+    public HomePage(ChatManager chatManager) {
         this.chatManager = chatManager;
-        this.onBackHome = onBackHome;
-        this.onChatOpen = onChatOpen;
         
         setLayout(new BorderLayout());
         
@@ -37,6 +30,14 @@ public class HomePage extends JPanel {
         
         // Load chats
         loadChats();
+
+        // Refresh whenever this panel becomes visible (e.g. navigating back from a chat)
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                loadChats();
+            }
+        });
     }
 
     private void loadChats() {
@@ -88,7 +89,7 @@ public class HomePage extends JPanel {
         
         // Middle: click area
         JButton openButton = new JButton("Open");
-        openButton.addActionListener(e -> onChatOpen.onChatOpened(chat));
+        openButton.addActionListener(e -> NavigationManager.getInstance().navigateTo("Chat_" + chat.getId()));
         
         // Right side: delete button
         JButton deleteButton = new JButton("Delete");
