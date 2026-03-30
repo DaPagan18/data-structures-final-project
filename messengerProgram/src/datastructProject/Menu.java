@@ -53,7 +53,7 @@ public class Menu {
         JPanel contactsPanel = new ContactsPage(profile, userRegistry);
         JPanel searchPanel = new SearchPage(chatManager.getChatsList(), chatManager);
         JPanel editProfilePanel = new EditProfilePage(profile);
-        JPanel savePanel = new SaveLoadPage();
+        JPanel savePanel = new SaveLoadPage(profile, userRegistry);
 
         cardPanel.add(homePanel, "Home");
         cardPanel.add(contactsPanel, "Contacts");
