@@ -2,6 +2,7 @@ package datastructProject;
 
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.BufferedReader;
@@ -60,7 +61,7 @@ public class SaveLoadPage extends JPanel {
 
             printWriter.println("[CONTACTS]");
              // Iterate through the profile's contacts and write their information to the file
-            for (Contact contact : profile.getAllContacts()) {
+             for (Contact contact : profile) {
                 printWriter.println("Contact :" + (contactNum));
                 printWriter.println(contact.getName());
                 printWriter.println(contact.getPhoneNumber());
@@ -69,7 +70,23 @@ public class SaveLoadPage extends JPanel {
             }
 
             printWriter.println("[CHATS]");
-            printWriter.println(profile.getChatManager().getChatHistory());
+            int chatNum = 0;
+            for (Chat chat : profile.getChatManager()) {
+                printWriter.println("Chat :" + (chatNum));
+                printWriter.println("ID: " + chat.getId());
+                printWriter.println("Participant 1: " + chat.getParticipant1PhoneNumber());
+                printWriter.println("Participant 2: " + chat.getParticipant2PhoneNumber());
+                printWriter.println("Messages:");
+                for (Message message : chat.getMessages()) {
+                    printWriter.println("  Message ID: " + message.getMessageId());
+                    printWriter.println("  From: " + message.getFrom());
+                    printWriter.println("  Content: " + message.getMessageContent());
+                    printWriter.println("  Time: " + message.getTimeSent());
+                    printWriter.println("  Read: " + message.isRead());
+                    printWriter.println("  Liked: " + message.isLiked());
+                }
+                chatNum++;
+            }
         } catch (Exception e) {
                 System.out.println("Sorry, there has been a problem opening or writing to the file");
                 System.out.println("/t" + e);

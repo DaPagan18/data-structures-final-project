@@ -6,8 +6,9 @@
 package datastructProject;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
-public class Profile {
+public class Profile implements Iterable<Contact> {
 
     private String name;
     private String phoneNumber;
@@ -151,6 +152,11 @@ public class Profile {
 
     public boolean deleteMessage(String chatId, String messageId) {
         return chatManager.deleteMessage(chatId, messageId);
+    }
+
+    @Override
+    public Iterator<Contact> iterator() {
+        return contactsByNumber.values().iterator();
     }
 
 }

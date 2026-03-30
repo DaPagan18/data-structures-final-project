@@ -9,9 +9,10 @@ package datastructProject;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
-public class ChatManager {
+public class ChatManager implements Iterable<Chat> {
     private final HashMap<String, Chat> chats = new HashMap<>();
     private int messageIdCounter = 0;
 
@@ -146,5 +147,10 @@ public class ChatManager {
             return newChat;
         }
 
+    }
+
+    @Override
+    public Iterator<Chat> iterator() {
+        return chats.values().iterator();
     }
 }
