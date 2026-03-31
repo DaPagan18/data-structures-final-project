@@ -45,7 +45,8 @@ public class EditProfilePage extends JPanel {
                 : profilePicPath;
         try {
             BufferedImage profileImage = ImageIO.read(new File(pathToLoad));
-            profileImageLabel = new JLabel(new ImageIcon(profileImage));
+            Image scaledprofileImage = profileImage.getScaledInstance(250,250, Image.SCALE_DEFAULT);
+            profileImageLabel = new JLabel(new ImageIcon(scaledprofileImage));
         } catch (IOException ex) {
             System.out.println("Error loading image");
         }
@@ -119,9 +120,6 @@ public class EditProfilePage extends JPanel {
 
 
         int result = JOptionPane.showConfirmDialog(this, form, "Change Profile Picture", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) {
-
-        }
     }
     
     public void changedPic() {
@@ -134,7 +132,8 @@ public class EditProfilePage extends JPanel {
                 profilePicPath = file.getAbsolutePath();
                 profile.setProfilePicPath(profilePicPath);
                 BufferedImage picture = ImageIO.read(file);
-                profileImageLabel.setIcon(new ImageIcon(picture));
+                Image scaledPicture = picture.getScaledInstance(250, 250, Image.SCALE_DEFAULT);
+                profileImageLabel.setIcon(new ImageIcon(scaledPicture));
             } catch (IOException ex) {
                 ex.printStackTrace();
                 System.out.println("Error loading image");
