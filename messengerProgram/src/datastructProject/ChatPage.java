@@ -20,6 +20,7 @@ public class ChatPage extends JPanel {
     public ChatPage(Chat chat, ChatManager chatManager) {
         this.currentChat = chat;
         this.chatManager = chatManager;
+        chatManager.markAllMessagesAsRead(chat.getId());
         
         setLayout(new BorderLayout());
         
@@ -135,7 +136,7 @@ public class ChatPage extends JPanel {
         messageText.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         contentPanel.add(messageText);
         
-        JLabel timeLabel = new JLabel(message.getTimeSent().format(formatter));
+        JLabel timeLabel = new JLabel(message.getTimeSent().format(formatter) + (message.isRead() ? "" : " (Unread)"));
         timeLabel.setFont(new Font("Sans Serif", Font.ITALIC, 10));
         timeLabel.setForeground(Color.GRAY);
         contentPanel.add(timeLabel);

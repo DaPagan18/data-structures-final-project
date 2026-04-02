@@ -44,6 +44,7 @@ public class ChatManager implements Iterable<Chat> {
 
         String messageId = "msg_" + System.currentTimeMillis() + "_" + (++messageIdCounter);
         Message message = new Message(messageId, chatId, from, messageContent, LocalDateTime.now());
+        message.setRead(true); // Sent messages are read by default
         chat.addMessage(message);
         return true;
     }
@@ -84,6 +85,15 @@ public class ChatManager implements Iterable<Chat> {
 
         message.setRead(true);
         return true;
+    }
+
+    public void markAllMessagesAsRead(String chatId) {
+        Chat chat = chats.get(chatId);
+        if (chat != null) {
+            for (Message message : chat.getMessages()) {
+                message.setRead(true);
+            }
+        }
     }
 
     public List<Message> getUnreadMessages(String chatId) {
