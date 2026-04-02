@@ -124,7 +124,18 @@ public class ChatPage extends JPanel {
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         
-        JLabel senderLabel = new JLabel(message.getFrom());
+        String senderName;
+        if (isFromMe) {
+            senderName = "You";
+        } else {
+            Profile senderProfile = NavigationManager.getInstance().getUserRegistry().getProfile(message.getFrom());
+            if (senderProfile != null) {
+                senderName = senderProfile.getName();
+            } else {
+                senderName = message.getFrom();
+            }
+        }
+        JLabel senderLabel = new JLabel(senderName);
         senderLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         contentPanel.add(senderLabel);
         
@@ -184,7 +195,7 @@ public class ChatPage extends JPanel {
     
     public void updateChat(Chat chat) {
         this.currentChat = chat;
-        //chatTitleLabel.setText(currentChat.getContactName());
+        chatTitleLabel.setText(currentChat.getContactName());
         loadChatMessages();
     }
 }
