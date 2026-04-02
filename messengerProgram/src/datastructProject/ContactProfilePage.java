@@ -53,9 +53,12 @@ public class ContactProfilePage extends JPanel {
         phoneLabel.setText("Phone: " + contact.getPhoneNumber());
 
         String picPath = contact.getProfilePicPath();
-        String pathToLoad = (picPath == null || picPath.isEmpty())
-                ? "messengerProgram/src/datastructProject/images/profilePicture.png"
-                : picPath;
+        String pathToLoad;
+        if (picPath == null || picPath.isEmpty()) {
+            pathToLoad = "messengerProgram/src/datastructProject/images/profilePicture.png";
+        } else {
+            pathToLoad = picPath;
+        }
         try {
             BufferedImage img = ImageIO.read(new File(pathToLoad));
             Image scaled = img.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
