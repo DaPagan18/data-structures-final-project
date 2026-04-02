@@ -128,12 +128,7 @@ public class ChatPage extends JPanel {
         if (isFromMe) {
             senderName = "You";
         } else {
-            Profile senderProfile = NavigationManager.getInstance().getUserRegistry().getProfile(message.getFrom());
-            if (senderProfile != null) {
-                senderName = senderProfile.getName();
-            } else {
-                senderName = message.getFrom();
-            }
+            senderName = currentChat.getContactName();
         }
         JLabel senderLabel = new JLabel(senderName);
         senderLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
