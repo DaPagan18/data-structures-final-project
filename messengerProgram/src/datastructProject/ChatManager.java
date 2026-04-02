@@ -141,13 +141,8 @@ public class ChatManager implements Iterable<Chat> {
 
 
     public Chat getOrCreateChatForContact(String phone1, String phone2){
-        String chatId = "";
+        String chatId = constructChatId(phone1, phone2);
 
-        if(phone1.compareTo(phone2) <= 0){
-            chatId = phone1 + "_" + phone2;
-        }else {
-            chatId = phone2 + "_" + phone1;
-        }
 
         if(chats.containsKey(chatId)){
             return chats.get(chatId);
@@ -157,6 +152,29 @@ public class ChatManager implements Iterable<Chat> {
             return newChat;
         }
 
+    }
+
+    public boolean checkForChat(String phone1, String phone2){
+        String chatId = constructChatId(phone1, phone2);
+
+        if(chats.containsKey(chatId)){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
+
+    public String constructChatId(String phone1, String phone2){
+
+        String chatId = "";
+        if(phone1.compareTo(phone2) <= 0){
+            chatId = phone1 + "_" + phone2;
+        }else {
+            chatId = phone2 + "_" + phone1;
+        }
+        return chatId;
     }
 
     @Override
