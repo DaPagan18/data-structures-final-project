@@ -154,14 +154,16 @@ public class ChatPage extends JPanel {
         });
         buttonsPanel.add(likeButton);
         
-        JButton deleteButton = new JButton("Delete");
-        deleteButton.setFont(new Font("Sans Serif", Font.PLAIN, 10));
-        deleteButton.setForeground(Color.RED);
-        deleteButton.addActionListener(e -> {
-            chatManager.deleteMessage(currentChat.getId(), message.getId());
-            loadChatMessages();
-        });
-        buttonsPanel.add(deleteButton);
+        if (isFromMe) {
+            JButton deleteButton = new JButton("Delete");
+            deleteButton.setFont(new Font("Sans Serif", Font.PLAIN, 10));
+            deleteButton.setForeground(Color.RED);
+            deleteButton.addActionListener(e -> {
+                chatManager.deleteMessage(currentChat.getId(), message.getId());
+                loadChatMessages();
+            });
+            buttonsPanel.add(deleteButton);
+        }
         
         messagePanel.add(buttonsPanel, BorderLayout.EAST);
         
