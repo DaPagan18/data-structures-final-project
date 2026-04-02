@@ -128,12 +128,9 @@ public class ContactsPage extends JPanel {
      * appends a row to the scrollable list.
      */
     private void openAddContactDialog() {
-        JTextField nameField = new JTextField(20);
         JTextField phoneField = new JTextField(20);
 
-        JPanel form = new JPanel(new GridLayout(2, 2, 8, 8));
-        form.add(new JLabel("Name:"));
-        form.add(nameField);
+        JPanel form = new JPanel(new GridLayout(1, 1, 8, 8));
         form.add(new JLabel("Phone Number:"));
         form.add(phoneField);
 
@@ -146,7 +143,6 @@ public class ContactsPage extends JPanel {
         );
 
         if (result == JOptionPane.OK_OPTION) {
-            String name = nameField.getText().trim();
             String phone = phoneField.getText().trim();
 
             if (!userRegistry.lookup(phone)){
@@ -154,15 +150,15 @@ public class ContactsPage extends JPanel {
                 return;
             }
 
-            if (name.isEmpty() || phone.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Name and phone number cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            if (phone.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "phone number cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             Profile registeredUser = userRegistry.getProfile(phone);
             String picPath = registeredUser.getProfilePicPath();
 
-            Contact newContact = new Contact(name, phone, picPath);
+            Contact newContact = new Contact(phone, picPath);
             profile.addContact(newContact);
             refreshList(new ArrayList<>(profile.getAllContacts().values()));
         }

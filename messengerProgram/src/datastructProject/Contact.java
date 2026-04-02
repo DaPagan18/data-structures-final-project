@@ -11,6 +11,7 @@ public class Contact {
     private String phoneNumber;
     private String profilePicPath;
     private String lastActive;
+    private UserRegistry userRegistry;
 
     public Contact() {
         name = "";
@@ -19,10 +20,11 @@ public class Contact {
         lastActive = "";
     }
 
-    public Contact(String name, String phoneNumber, String profilePicPath) {
-        this.name = name;
+    public Contact(String phoneNumber, String profilePicPath) {
+        
         this.phoneNumber = phoneNumber;
         this.profilePicPath = profilePicPath;
+        this.name = setName();
         this.lastActive = "";
     }
 
@@ -30,8 +32,9 @@ public class Contact {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String setName(){
+        userRegistry = NavigationManager.getInstance().getUserRegistry();
+        return (userRegistry.getProfile(this.phoneNumber).getName());
     }
 
     public String getPhoneNumber() {
