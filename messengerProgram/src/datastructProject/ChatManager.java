@@ -158,10 +158,10 @@ public class ChatManager implements Iterable<Chat> {
         String chatId = constructChatId(phone1, phone2);
 
         if(chats.containsKey(chatId)){
-            return false;
+            return true;
         }
         else{
-            return true;
+            return false;
         }
 
     }
