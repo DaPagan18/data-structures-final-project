@@ -30,7 +30,7 @@ public class ContactProfilePage extends JPanel {
         JButton backButton = new JButton("Back");
         backButton.addActionListener(e -> onBack.run());
 
-        JButton messageButton = new JButton("Message");
+        JButton messageButton = new JButton("Open Chat");
         messageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageButton.addActionListener(e -> openChat());
 
