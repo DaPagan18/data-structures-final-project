@@ -66,8 +66,13 @@ public class HomePage extends JPanel {
         infoPanel.setBackground(new Color(245, 245, 245));
         infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
-        JLabel nameLabel = new JLabel(chat.getContactName());
+        // Check for unread messages
+        boolean hasUnread = !chatManager.getUnreadMessages(chat.getId()).isEmpty();
+        JLabel nameLabel = new JLabel(chat.getContactName() + (hasUnread ? " (Unread)" : ""));
         nameLabel.setFont(new Font("Sans Serif", Font.BOLD, 14));
+        if (hasUnread) {
+            nameLabel.setForeground(new Color(0, 100, 200));
+        }
         infoPanel.add(nameLabel);
         
         Message lastMessage = chat.getLastMessage();

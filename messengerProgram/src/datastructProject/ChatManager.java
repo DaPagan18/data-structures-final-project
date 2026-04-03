@@ -44,7 +44,6 @@ public class ChatManager implements Iterable<Chat> {
 
         String messageId = "msg_" + System.currentTimeMillis() + "_" + (++messageIdCounter);
         Message message = new Message(messageId, chatId, from, messageContent, LocalDateTime.now());
-        message.setRead(true); // Sent messages are read by default
         chat.addMessage(message);
         return true;
     }
