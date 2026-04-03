@@ -151,7 +151,8 @@ public class SaveLoadPage extends JPanel {
                 
                 if (line != null && line.equals("[CHATS]")) {
                     NavigationManager.getInstance().getChatManager().getAllChats().clear();
-                    while ((line = reader.readLine()) != null) {
+                    line = reader.readLine(); // prime the loop
+                    while (line != null) {
                         if (line.startsWith("Chat:")) {
                             reader.readLine(); // skip "ID:..." line
                             String participant1 = reader.readLine().split(":", 2)[1];
@@ -167,7 +168,8 @@ public class SaveLoadPage extends JPanel {
                             }
                             chat = new Chat(chatTimeSent, participant1, participant2);
                             NavigationManager.getInstance().getChatManager().addChat(chat);
-                            while ((line = reader.readLine()) != null && !line.startsWith("Chat:")) {
+                            line = reader.readLine(); // prime the message loop
+                            while (line != null && !line.startsWith("Chat:")) {
                                 if (line.startsWith("Message ID:")) {
                                     String messageId = line.split(":", 2)[1];
                                     String from = reader.readLine().split(":", 2)[1];
@@ -181,10 +183,11 @@ public class SaveLoadPage extends JPanel {
                                     message.setLiked(liked);
                                     chat.addMessage(message);
                                 }
+                                line = reader.readLine();
                             }
-                            if (line == null) {
-                                break; // End of file reached
-                            }
+                            // line is now null (EOF) or the next "Chat:" line — outer loop handles both correctly
+                        } else {
+                            line = reader.readLine();
                         }
                     }
                 }
