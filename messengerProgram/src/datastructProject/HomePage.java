@@ -54,6 +54,10 @@ public class HomePage extends JPanel {
         chatsListPanel.repaint();
     }
 
+    public void refresh() {
+        loadChats();
+    }
+
     private JPanel createChatPanel(Chat chat) {
         JPanel chatPanel = new JPanel(new BorderLayout());
         chatPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));

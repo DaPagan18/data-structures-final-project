@@ -183,6 +183,7 @@ public class SaveLoadPage extends JPanel {
                 }
             }
             JOptionPane.showMessageDialog(this, "Profile loaded successfully!");
+            NavigationManager.getInstance().navigateTo("Home");
         }catch (FileNotFoundException e)
 		{
 		    JOptionPane.showMessageDialog(this, "File not found: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

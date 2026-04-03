@@ -227,5 +227,9 @@ public class ContactsPage extends JPanel {
         contactListPanel.revalidate();
         contactListPanel.repaint();
     }
+
+    public void refresh() {
+        refreshList(new ArrayList<>(profile.getAllContacts().values()));
+    }
 }
 

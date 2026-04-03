@@ -59,6 +59,12 @@ public class NavigationManager {
         if (pageName.equals("EditProfile") && pages.containsKey(pageName)) {
             ((EditProfilePage) pages.get(pageName)).refresh();
         }
+        if (pageName.equals("Home") && pages.containsKey(pageName)) {
+            ((HomePage) pages.get(pageName)).refresh();
+        }
+        if (pageName.equals("Contacts") && pages.containsKey(pageName)) {
+            ((ContactsPage) pages.get(pageName)).refresh();
+        }
         cardLayout.show(cardPanel, pageName);
     }
 
