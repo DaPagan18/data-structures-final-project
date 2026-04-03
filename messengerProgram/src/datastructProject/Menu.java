@@ -2,7 +2,6 @@ package datastructProject;
 
 import java.awt.*;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import javax.swing.*;
 
 public class Menu {
@@ -64,7 +63,7 @@ public class Menu {
         // Add chat pages dynamically
         for (Chat chat : chatManager.getChatsList()) {
             ChatPage chatPage = new ChatPage(chat, chatManager);
-            cardPanel.add(chatPage, "Chat_" + chat.getId());
+            NavigationManager.getInstance().registerPage(chatPage, "Chat_" + chat.getId());
         }
 
         dropdown.addActionListener(e -> {

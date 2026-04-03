@@ -1,6 +1,7 @@
 package datastructProject;
 
 import java.awt.CardLayout;
+import java.util.HashMap;
 import javax.swing.JPanel;
 
 public class NavigationManager {
@@ -10,6 +11,7 @@ public class NavigationManager {
     private ChatManager chatManager;
     private UserRegistry userRegistry;
     private String currentUserPhone;
+    private HashMap<String, JPanel> pages = new HashMap<>();
 
     private NavigationManager() {}
 
@@ -47,10 +49,18 @@ public class NavigationManager {
     }
 
     public void navigateTo(String pageName) {
+        if (pages.containsKey(pageName) && pages.get(pageName) instanceof ChatPage) {
+            String id = pageName.substring(5);
+            Chat chat = chatManager.getChat(id);
+            if (chat != null) {
+                ((ChatPage) pages.get(pageName)).updateChat(chat);
+            }
+        }
         cardLayout.show(cardPanel, pageName);
     }
 
     public void registerPage(JPanel page, String name){
         cardPanel.add(page, name);
+        pages.put(name, page);
     }
 }
