@@ -13,7 +13,6 @@ public class Profile implements Iterable<Contact> {
     private String name;
     private String phoneNumber;
     private String profilePicPath;
-    private ChatManager chatManager = new ChatManager();
     private final HashMap<String, Contact> contactsByNumber = new HashMap<>();
 
     //creates an empty profile ready to be edited
@@ -119,39 +118,6 @@ public class Profile implements Iterable<Contact> {
         }while(userRegistry.lookup(phoneNumber));
 
         return phoneNumber;
-    }
-
-    //getters and setters for the chat manager
-    public ChatManager getChatManager() {
-        return chatManager;
-    }   
-
-    public void setChatManager(ChatManager chatManager) {
-        this.chatManager = chatManager;
-    }
-
-    public void addChat(Chat chat) {
-        chatManager.addChat(chat);
-    }
-
-    public Chat getChat(String chatId) {
-        return chatManager.getChat(chatId);
-    }
-
-    public boolean deleteChat(String chatId) {
-        return chatManager.deleteChat(chatId);
-    }
-
-    public HashMap<String, Chat> getAllChats() {
-        return chatManager.getAllChats();
-    }
-
-    public boolean sendMessage(String chatId, String from, String messageContent) {
-        return chatManager.sendMessage(chatId, from, messageContent);
-    }
-
-    public boolean deleteMessage(String chatId, String messageId) {
-        return chatManager.deleteMessage(chatId, messageId);
     }
 
     @Override

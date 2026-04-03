@@ -144,7 +144,7 @@ public class SaveLoadPage extends JPanel {
                 } 
                 
                 else if (line.equals("[CHATS]")) {
-                    profile.getChatManager().getAllChats().clear();
+                    NavigationManager.getInstance().getChatManager().getAllChats().clear();
                     while ((line = reader.readLine()) != null) {
                         if (line.startsWith("Chat :")) {
                             String participant1 = reader.readLine().split(": ")[1];
@@ -159,7 +159,7 @@ public class SaveLoadPage extends JPanel {
                                 // nextLine is "Messages:", already read, no skip
                             }
                             chat = new Chat(chatTimeSent, participant1, participant2);
-                            profile.getChatManager().addChat(chat);
+                            NavigationManager.getInstance().getChatManager().addChat(chat);
                             while ((line = reader.readLine()) != null && !line.startsWith("Chat :")) {
                                 if (line.startsWith("Message ID: ")) {
                                     String messageId = line.split(": ")[1];
