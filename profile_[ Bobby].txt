@@ -1,0 +1,6 @@
+[PROFILE]
+Name: Bobby
+Phone Number: 1219676646
+Profile Picture Path: C:\Users\scalu\OneDrive\Pictures\IMG-20251203-WA0028.jpg
+[CONTACTS]
+[CHATS]

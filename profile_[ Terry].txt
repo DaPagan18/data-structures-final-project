@@ -1,0 +1,10 @@
+[PROFILE]
+Name:Terry
+Phone Number:2602600843
+Profile Picture Path:
+[CONTACTS]
+Contact :0
+Name:CalumS
+Phone Number:456
+Profile Picture Path:
+[CHATS]
