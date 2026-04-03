@@ -165,12 +165,52 @@ public class ContactsPage extends JPanel {
     }
 
 
+    /**
+     * Sorts the contact list by the time of the most recent message received,
+     * with the most recently active contact appearing first.
+     * Contacts with no messages are placed at the bottom.
+     */
     private void sortByMostRecent() {
-        // i will finish this once the message system has been implemented as that will have the time of message sent
+        ChatManager chatManager = NavigationManager.getInstance().getChatManager();
+        List<Contact> sorted = new ArrayList<>(profile.getAllContacts().values());
+
+        sorted.sort((a, b) -> {
+            java.time.LocalDateTime timeA = null;
+            java.time.LocalDateTime timeB = null;
+
+            if (chatManager.checkForChat(profile.getPhoneNumber(), a.getPhoneNumber())) {
+                Chat chatA = chatManager.getOrCreateChatForContact(profile.getPhoneNumber(), a.getPhoneNumber());
+                Message lastA = chatA.getLastMessage();
+                if (lastA != null) {
+                    timeA = lastA.getTimeSent();
+                }
+            }
+
+            if (chatManager.checkForChat(profile.getPhoneNumber(), b.getPhoneNumber())) {
+                Chat chatB = chatManager.getOrCreateChatForContact(profile.getPhoneNumber(), b.getPhoneNumber());
+                Message lastB = chatB.getLastMessage();
+                if (lastB != null) {
+                    timeB = lastB.getTimeSent();
+                }
+            }
+
+            if (timeA == null && timeB == null) {
+                return 0;
+            }
+            if (timeA == null) {
+                return 1;
+            }
+            if (timeB == null) {
+                return -1;
+            }
+            return timeB.compareTo(timeA);
+        });
+
+        refreshList(sorted);
     }
 
     private void sortByAlphabeticalOrder() {
-        // Get all contacts, sort by name A→Z, then refresh the panel
+        // Get all contacts, sort by name A to Z, then refresh the panel
         List<Contact> sorted = new ArrayList<>(profile.getAllContacts().values());
         sorted.sort(Comparator.comparing(c -> c.getName().toLowerCase()));
         refreshList(sorted);
