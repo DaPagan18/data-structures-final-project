@@ -56,7 +56,7 @@ public class NavigationManager {
                 ((ChatPage) pages.get(pageName)).updateChat(chat);
             }
         }
-        if (pageName.equals("EditProfile") && pages.containsKey(pageName)) {
+        if (pageName.equals("Edit Profile") && pages.containsKey(pageName)) {
             ((EditProfilePage) pages.get(pageName)).refresh();
         }
         if (pageName.equals("Home") && pages.containsKey(pageName)) {
