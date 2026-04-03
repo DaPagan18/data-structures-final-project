@@ -125,18 +125,18 @@ public class SaveLoadPage extends JPanel {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.equals("[PROFILE]")) {
-                    profile.setName(reader.readLine().split(": ")[1]);
-                    profile.setPhoneNumber(reader.readLine().split(": ")[1]);
-                    profile.setProfilePicPath(reader.readLine().split(": ")[1]);
+                    profile.setName(reader.readLine().split(":", 2)[1]);
+                    profile.setPhoneNumber(reader.readLine().split(":", 2)[1]);
+                    profile.setProfilePicPath(reader.readLine().split(":", 2)[1]);
                 } 
                 
                 else if (line.equals("[CONTACTS]")) {
                     profile.getAllContacts().clear();
                     while ((line = reader.readLine()) != null && !line.equals("[CHATS]")) {
                         if (line.startsWith("Contact :")) {
-                            String name = reader.readLine();
-                            String phone = reader.readLine();
-                            String pic = reader.readLine();
+                            String name = reader.readLine().split(":", 2)[1];
+                            String phone = reader.readLine().split(":", 2)[1];
+                            String pic = reader.readLine().split(":", 2)[1];
                             contact = new Contact(name, phone, pic);
                             profile.addContact(contact);
                         }
@@ -146,13 +146,13 @@ public class SaveLoadPage extends JPanel {
                 else if (line.equals("[CHATS]")) {
                     NavigationManager.getInstance().getChatManager().getAllChats().clear();
                     while ((line = reader.readLine()) != null) {
-                        if (line.startsWith("Chat :")) {
-                            String participant1 = reader.readLine().split(": ")[1];
-                            String participant2 = reader.readLine().split(": ")[1];
+                        if (line.startsWith("Chat:")) {
+                            String participant1 = reader.readLine().split(":", 2)[1];
+                            String participant2 = reader.readLine().split(":", 2)[1];
                             String nextLine = reader.readLine();
                             LocalDateTime chatTimeSent;
                             if (nextLine.startsWith("Time Sent:")) {
-                                chatTimeSent = LocalDateTime.parse(nextLine.split(": ")[1]);
+                                chatTimeSent = LocalDateTime.parse(nextLine.split(":", 2)[1]);
                                 reader.readLine(); // Skip "Messages:" line
                             } else {
                                 chatTimeSent = LocalDateTime.now();
@@ -160,14 +160,14 @@ public class SaveLoadPage extends JPanel {
                             }
                             chat = new Chat(chatTimeSent, participant1, participant2);
                             NavigationManager.getInstance().getChatManager().addChat(chat);
-                            while ((line = reader.readLine()) != null && !line.startsWith("Chat :")) {
-                                if (line.startsWith("Message ID: ")) {
-                                    String messageId = line.split(": ")[1];
-                                    String from = reader.readLine().split(": ")[1];
-                                    String content = reader.readLine().split(": ")[1];
-                                    LocalDateTime time = LocalDateTime.parse(reader.readLine().split(": ")[1]);
-                                    boolean read = Boolean.parseBoolean(reader.readLine().split(": ")[1]);
-                                    boolean liked = Boolean.parseBoolean(reader.readLine().split(": ")[1]);
+                            while ((line = reader.readLine()) != null && !line.startsWith("Chat:")) {
+                                if (line.startsWith("Message ID:")) {
+                                    String messageId = line.split(":", 2)[1];
+                                    String from = reader.readLine().split(":", 2)[1];
+                                    String content = reader.readLine().split(":", 2)[1];
+                                    LocalDateTime time = LocalDateTime.parse(reader.readLine().split(":", 2)[1]);
+                                    boolean read = Boolean.parseBoolean(reader.readLine().split(":", 2)[1]);
+                                    boolean liked = Boolean.parseBoolean(reader.readLine().split(":", 2)[1]);
 
                                     Message message = new Message(messageId, chat.getId(), from, content, time);
                                     message.setRead(read);
