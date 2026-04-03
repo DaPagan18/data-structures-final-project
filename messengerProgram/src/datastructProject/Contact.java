@@ -28,6 +28,16 @@ public class Contact {
         this.lastActive = "";
     }
 
+    /*
+    / Another Overloaded constructor used for loading contacts from a save file. 
+    */
+    public Contact(String name, String phoneNumber, String profilePicPath) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.profilePicPath = profilePicPath;
+        this.lastActive = "";
+    }
+
     public String getName() {
         return name;
     }

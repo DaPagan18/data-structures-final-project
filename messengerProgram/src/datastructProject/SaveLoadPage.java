@@ -2,6 +2,7 @@ package datastructProject;
 
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.io.IOException;
 import java.io.FileNotFoundException;
@@ -19,6 +20,8 @@ public class SaveLoadPage extends JPanel {
 
     private Profile profile;
     private UserRegistry userRegistry;
+    private Contact contact;
+    private Chat chat;
 
     public SaveLoadPage(Profile profile, UserRegistry userRegistry) {
         this.profile = profile;
@@ -53,15 +56,16 @@ public class SaveLoadPage extends JPanel {
         try {
             outputStream = new FileOutputStream("profile_[ " + profile.getName() + "].txt");
             printWriter = new PrintWriter(outputStream);
-           
+
             printWriter.println("[PROFILE]");
             printWriter.println("Name: " + profile.getName());
             printWriter.println("Phone Number: " + profile.getPhoneNumber());
             printWriter.println("Profile Picture Path: " + profile.getProfilePicPath());
 
             printWriter.println("[CONTACTS]");
-             // Iterate through the profile's contacts and write their information to the file
-             for (Contact contact : profile) {
+            // Iterate through the profile's contacts and write their information to the
+            // file
+            for (Contact contact : profile) {
                 printWriter.println("Contact :" + (contactNum));
                 printWriter.println(contact.getName());
                 printWriter.println(contact.getPhoneNumber());
@@ -76,9 +80,10 @@ public class SaveLoadPage extends JPanel {
                 printWriter.println("ID: " + chat.getId());
                 printWriter.println("Participant 1: " + chat.getParticipant1PhoneNumber());
                 printWriter.println("Participant 2: " + chat.getParticipant2PhoneNumber());
+                printWriter.println("Time Sent: " + chat.getTimeSent());
                 printWriter.println("Messages:");
                 for (Message message : chat.getMessages()) {
-                    printWriter.println("  Message ID: " + message.getMessageId());
+                    printWriter.println("  Message ID: " + message.getId());
                     printWriter.println("  From: " + message.getFrom());
                     printWriter.println("  Content: " + message.getMessageContent());
                     printWriter.println("  Time: " + message.getTimeSent());
@@ -88,14 +93,12 @@ public class SaveLoadPage extends JPanel {
                 chatNum++;
             }
         } catch (Exception e) {
-                System.out.println("Sorry, there has been a problem opening or writing to the file");
-                System.out.println("/t" + e);
-         }
-         finally
-            {
-                if (printWriter != null)
-                    printWriter.close(); // close the file
-            }
+            System.out.println("Sorry, there has been a problem opening or writing to the file");
+            System.out.println("/t" + e);
+        } finally {
+            if (printWriter != null)
+                printWriter.close(); // close the file
+        }
         JOptionPane.showMessageDialog(this, "Profile saved successfully!");
     }
 
@@ -105,23 +108,56 @@ public class SaveLoadPage extends JPanel {
             reader = new BufferedReader(new FileReader("profile_[ " + profile.getName() + "].txt"));
             String line;
             while ((line = reader.readLine()) != null) {
-                switch (line) {
-                    case "[PROFILE]":
-                        profile.setName(reader.readLine().split(": ")[1]);
-                        profile.setPhoneNumber(reader.readLine().split(": ")[1]);
-                        profile.setProfilePicPath(reader.readLine().split(": ")[1]);
-                        break;
-                    case "[CONTACTS]":
-                        profile.getAllContacts().clear(); // Clear existing contacts before loading new ones
-                        String name = reader.readLine();
-                        String phone = reader.readLine();
-                        String pic = reader.readLine();
-                        Contact contact = new Contact(name, phone, pic);
-                        profile.addContact(contact);
-                        break;
-                    case "[CHATS]":
-                       
-                        break;
+                if (line.equals("[PROFILE]")) {
+                    profile.setName(reader.readLine().split(": ")[1]);
+                    profile.setPhoneNumber(reader.readLine().split(": ")[1]);
+                    profile.setProfilePicPath(reader.readLine().split(": ")[1]);
+                } 
+                
+                else if (line.equals("[CONTACTS]")) {
+                    profile.getAllContacts().clear();
+                    while ((line = reader.readLine()) != null && !line.equals("[CHATS]")) {
+                        if (line.startsWith("Contact :")) {
+                            String name = reader.readLine();
+                            String phone = reader.readLine();
+                            String pic = reader.readLine();
+                            contact = new Contact(name, phone, pic);
+                            profile.addContact(contact);
+                        }
+                    }
+                } 
+                
+                else if (line.equals("[CHATS]")) {
+                    profile.getChatManager().getAllChats().clear();
+                    while ((line = reader.readLine()) != null) {
+                        if (line.startsWith("Chat :")) {
+                            String participant1 = reader.readLine().split(": ")[1];
+                            String participant2 = reader.readLine().split(": ")[1];
+                            LocalDateTime timeSent = LocalDateTime.parse(reader.readLine().split(": ")[1]);
+                            chat = new Chat(timeSent, participant1, participant2);
+                            profile.getChatManager().addChat(chat);
+
+                            reader.readLine(); // Skip "Messages:" line
+                            while ((line = reader.readLine()) != null && !line.startsWith("Chat :")) {
+                                if (line.startsWith("Message ID: ")) {
+                                    String messageId = line.split(": ")[1];
+                                    String from = reader.readLine().split(": ")[1];
+                                    String content = reader.readLine().split(": ")[1];
+                                    LocalDateTime time = LocalDateTime.parse(reader.readLine().split(": ")[1]);
+                                    boolean read = Boolean.parseBoolean(reader.readLine().split(": ")[1]);
+                                    boolean liked = Boolean.parseBoolean(reader.readLine().split(": ")[1]);
+
+                                    Message message = new Message(messageId, chat.getId(), from, content, timeSent);
+                                    message.setRead(read);
+                                    message.setLiked(liked);
+                                    chat.addMessage(message);
+                                }
+                            }
+                            if (line == null) {
+                                break; // End of file reached
+                            }
+                        }
+                    }
                 }
             }
         } catch (FileNotFoundException e) {

@@ -1,0 +1,6 @@
+[PROFILE]
+Name: 
+Phone Number: 7622482852
+Profile Picture Path: 
+[CONTACTS]
+[CHATS]
