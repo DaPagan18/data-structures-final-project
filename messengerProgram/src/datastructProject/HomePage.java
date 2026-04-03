@@ -85,7 +85,7 @@ public class HomePage extends JPanel {
             previewLabel.setForeground(Color.GRAY);
             infoPanel.add(previewLabel);
             
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
             JLabel timeLabel = new JLabel(lastMessage.getTimeSent().format(formatter));
             timeLabel.setFont(new Font("Sans Serif", Font.ITALIC, 10));
             timeLabel.setForeground(Color.GRAY);

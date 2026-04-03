@@ -101,7 +101,7 @@ public class ChatPage extends JPanel {
         messagesPanel.removeAll();
         
         List<Message> messages = currentChat.getMessages();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         
         for (Message message : messages) {
             JPanel messagePanel = createMessagePanel(message, formatter);
