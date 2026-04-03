@@ -89,7 +89,7 @@ public class SaveLoadPage extends JPanel {
 
             printWriter.println("[CHATS]");
             int chatNum = 0;
-            for (Chat chat : profile.getChatManager()) {
+            for (Chat chat : NavigationManager.getInstance().getChatManager()) {
                 printWriter.println("Chat:" + (chatNum));
                 printWriter.println("ID:" + chat.getId());
                 printWriter.println("Participant 1:" + chat.getParticipant1PhoneNumber());
