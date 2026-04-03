@@ -60,13 +60,6 @@ public class ContactProfilePage extends JPanel {
         centerPanel.add(Box.createVerticalGlue());
 
         add(centerPanel, BorderLayout.CENTER);
-
-        //TEST MESSAGES USED FOR DEMO
-        Chat testChat = chatManager.getOrCreateChatForContact(currentUserPhone, "075");
-        chatManager.sendMessage(testChat.getId(), "075", "Hello, this is a test message 1");
-        chatManager.sendMessage(testChat.getId(), "075", "Hello, this is a test message 2");
-        chatManager.sendMessage(testChat.getId(), "075", "Hello, this is a test message 3");
-        chatManager.sendMessage(testChat.getId(), "075", "Hello, this is a test message 4");
     }
 
     public void setPage(Contact contact) {
@@ -91,12 +84,13 @@ public class ContactProfilePage extends JPanel {
 
         recentMessagesPanel.removeAll();
 
-        if(!chatManager.checkForChat(currentUserPhone, currentContact.getPhoneNumber())){
+        String currentPhone = NavigationManager.getInstance().getCurrentUserPhone();
+        if(!chatManager.checkForChat(currentPhone, currentContact.getPhoneNumber())){
             recentMessagesPanel.setBorder(BorderFactory.createTitledBorder("No messages received from this contact"));
         }
         else{
             recentMessagesPanel.setBorder(BorderFactory.createTitledBorder("Recent messages from this contact:"));
-            Chat chat = chatManager.getOrCreateChatForContact(currentUserPhone, currentContact.getPhoneNumber());
+            Chat chat = chatManager.getOrCreateChatForContact(currentPhone, currentContact.getPhoneNumber());
             List<Message> messages = chat.messages.getAll();
             int count = 0;
             int messageIndexCounter = 1;
@@ -121,7 +115,7 @@ public class ContactProfilePage extends JPanel {
     }
 
     private void openChat(){
-        Chat chat = chatManager.getOrCreateChatForContact(currentUserPhone, currentContact.getPhoneNumber());
+        Chat chat = chatManager.getOrCreateChatForContact(NavigationManager.getInstance().getCurrentUserPhone(), currentContact.getPhoneNumber());
         ChatPage newChatPage = new ChatPage(chat, chatManager);
 
         NavigationManager.getInstance().registerPage(newChatPage, "Chat_" + chat.getId());

@@ -128,6 +128,8 @@ public class SaveLoadPage extends JPanel {
                     profile.setName(reader.readLine().split(":", 2)[1]);
                     profile.setPhoneNumber(reader.readLine().split(":", 2)[1]);
                     profile.setProfilePicPath(reader.readLine().split(":", 2)[1]);
+                    userRegistry.addProfile(profile);
+                    NavigationManager.getInstance().storeUserRegistry(userRegistry, profile.getPhoneNumber());
                 } 
                 
                 else if (line.equals("[CONTACTS]")) {
@@ -139,14 +141,19 @@ public class SaveLoadPage extends JPanel {
                             String pic = reader.readLine().split(":", 2)[1];
                             contact = new Contact(name, phone, pic);
                             profile.addContact(contact);
+                            if (!userRegistry.lookup(phone)) {
+                                new Profile(name, phone, pic, userRegistry);
+                            }
                         }
                     }
+                    // contacts loop consumed the "[CHATS]" line, fall through to handle it
                 } 
                 
-                else if (line.equals("[CHATS]")) {
+                if (line != null && line.equals("[CHATS]")) {
                     NavigationManager.getInstance().getChatManager().getAllChats().clear();
                     while ((line = reader.readLine()) != null) {
                         if (line.startsWith("Chat:")) {
+                            reader.readLine(); // skip "ID:..." line
                             String participant1 = reader.readLine().split(":", 2)[1];
                             String participant2 = reader.readLine().split(":", 2)[1];
                             String nextLine = reader.readLine();
@@ -183,6 +190,12 @@ public class SaveLoadPage extends JPanel {
                 }
             }
             JOptionPane.showMessageDialog(this, "Profile loaded successfully!");
+            // Register chat pages for loaded chats
+            ChatManager cm = NavigationManager.getInstance().getChatManager();
+            for (Chat c : cm) {
+                ChatPage chatPage = new ChatPage(c, cm);
+                NavigationManager.getInstance().registerPage(chatPage, "Chat_" + c.getId());
+            }
             NavigationManager.getInstance().navigateTo("Home");
         }catch (FileNotFoundException e)
 		{

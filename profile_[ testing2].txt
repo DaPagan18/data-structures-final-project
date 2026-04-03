@@ -1,0 +1,38 @@
+[PROFILE]
+Name:testing2
+Phone Number:6540668250
+Profile Picture Path:
+[CONTACTS]
+Contact :0
+Name:Daniel
+Phone Number:123
+Profile Picture Path:
+Contact :1
+Name:Calum
+Phone Number:075
+Profile Picture Path:messengerProgram/src/datastructProject/images/calumProfilePic.png
+[CHATS]
+Chat:0
+ID:123_6540668250
+Participant 1:6540668250
+Participant 2:123
+Time Sent:2026-04-03T17:05:09.310607900
+Messages:
+Message ID:msg_1775232309307_1
+From:You
+Content:yo brodem 2
+Time:2026-04-03T17:05:09.310107700
+Read:true
+Liked:false
+Chat:1
+ID:075_6540668250
+Participant 1:6540668250
+Participant 2:075
+Time Sent:2026-04-03T17:05:18.194369
+Messages:
+Message ID:msg_1775232318194_2
+From:You
+Content:yo brodem 3
+Time:2026-04-03T17:05:18.194369
+Read:true
+Liked:false
