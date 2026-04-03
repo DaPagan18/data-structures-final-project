@@ -128,6 +128,9 @@ public class SaveLoadPage extends JPanel {
                     profile.setName(reader.readLine().split(":", 2)[1]);
                     profile.setPhoneNumber(reader.readLine().split(":", 2)[1]);
                     profile.setProfilePicPath(reader.readLine().split(":", 2)[1]);
+                    if (!userRegistry.lookup(profile.getPhoneNumber())) {
+                        userRegistry.addProfile(profile);
+                    }
                 } 
                 
                 else if (line.equals("[CONTACTS]")) {
@@ -147,6 +150,7 @@ public class SaveLoadPage extends JPanel {
                     NavigationManager.getInstance().getChatManager().getAllChats().clear();
                     while ((line = reader.readLine()) != null) {
                         if (line.startsWith("Chat:")) {
+                            String id = reader.readLine().split(":", 2)[1];
                             String participant1 = reader.readLine().split(":", 2)[1];
                             String participant2 = reader.readLine().split(":", 2)[1];
                             String nextLine = reader.readLine();
