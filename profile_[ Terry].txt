@@ -1,0 +1,56 @@
+[PROFILE]
+Name:Terry
+Phone Number:9753312230
+Profile Picture Path:C:\Users\scalu\OneDrive\Pictures\IMG-20251203-WA0028.jpg
+[CONTACTS]
+Contact :0
+Name:Daniel
+Phone Number:123
+Profile Picture Path:
+Contact :1
+Name:CalumS
+Phone Number:456
+Profile Picture Path:
+[CHATS]
+Chat:0
+ID:075_9753312230
+Participant 1:9753312230
+Participant 2:075
+Time Sent:2026-04-03T16:47:52.309243700
+Messages:
+Message ID:msg_1775231272299_1
+From:075
+Content:Hello, this is a test message 1
+Time:2026-04-03T16:47:52.309243700
+Read:true
+Liked:false
+Message ID:msg_1775231272309_2
+From:075
+Content:Hello, this is a test message 2
+Time:2026-04-03T16:47:52.309243700
+Read:true
+Liked:false
+Message ID:msg_1775231272309_3
+From:075
+Content:Hello, this is a test message 3
+Time:2026-04-03T16:47:52.309243700
+Read:true
+Liked:false
+Message ID:msg_1775231272309_4
+From:075
+Content:Hello, this is a test message 4
+Time:2026-04-03T16:47:52.309243700
+Read:true
+Liked:false
+Chat:1
+ID:456_9753312230
+Participant 1:9753312230
+Participant 2:456
+Time Sent:2026-04-03T16:48:19.332049600
+Messages:
+Message ID:msg_1775231299332_5
+From:You
+Content:HEY THERE
+Time:2026-04-03T16:48:19.332049600
+Read:true
+Liked:true
