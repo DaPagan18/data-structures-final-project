@@ -8,22 +8,28 @@ import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.File;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 
 public class SaveLoadPage extends JPanel {
 
+    // UI components
     private final JLabel title = new JLabel("Save/Load");
     private JPanel buttonBar;
 
+    // Fields of profile and user registry to be able to access the profile and contacts to save and load them
     private Profile profile;
     private UserRegistry userRegistry;
     private Contact contact;
     private Chat chat;
 
-    public SaveLoadPage(Profile profile, UserRegistry userRegistry) {
+    /*
+     * ### CONSTRUCTOR ###
+     * Initializes the UI components and sets up the layout
+     */
+    public SaveLoadPage(Profile profile, UserRegistry userRegistry) 
+    {
         this.profile = profile;
         this.userRegistry = userRegistry;
 
@@ -48,9 +54,18 @@ public class SaveLoadPage extends JPanel {
         add(topPanel, BorderLayout.NORTH);
     }
 
-    private void saveProfile() {
+    /*
+     * Method to save the profile and all its data to a text file
+     * Creates a new text file with the name "profile_[profile name].txt" 
+     * Writes the profile information, contacts, and chats to the file in a structured format  
+     */
+    private void saveProfile() 
+    {
+        // Creating a new file output stream and print writer to write to the file
         FileOutputStream outputStream = null;
         PrintWriter printWriter = null;
+
+        // Couunter to differentiate between contacts and chats when writing to the file
         int contactNum = 0;
 
         try {
@@ -58,44 +73,45 @@ public class SaveLoadPage extends JPanel {
             printWriter = new PrintWriter(outputStream);
 
             printWriter.println("[PROFILE]");
-            printWriter.println("Name: " + profile.getName());
-            printWriter.println("Phone Number: " + profile.getPhoneNumber());
-            printWriter.println("Profile Picture Path: " + profile.getProfilePicPath());
+            printWriter.println("Name:" + profile.getName());
+            printWriter.println("Phone Number:" + profile.getPhoneNumber());
+            printWriter.println("Profile Picture Path:" + profile.getProfilePicPath());
 
             printWriter.println("[CONTACTS]");
-            // Iterate through the profile's contacts and write their information to the
-            // file
+            // Iterate through the profile's contacts and write their information to the file
             for (Contact contact : profile) {
                 printWriter.println("Contact :" + (contactNum));
-                printWriter.println(contact.getName());
-                printWriter.println(contact.getPhoneNumber());
-                printWriter.println(contact.getProfilePicPath());
+                printWriter.println("Name:" + contact.getName());
+                printWriter.println("Phone Number:" + contact.getPhoneNumber());
+                printWriter.println("Profile Picture Path:" + contact.getProfilePicPath());
                 contactNum++;
             }
 
             printWriter.println("[CHATS]");
             int chatNum = 0;
             for (Chat chat : profile.getChatManager()) {
-                printWriter.println("Chat :" + (chatNum));
-                printWriter.println("ID: " + chat.getId());
-                printWriter.println("Participant 1: " + chat.getParticipant1PhoneNumber());
-                printWriter.println("Participant 2: " + chat.getParticipant2PhoneNumber());
-                printWriter.println("Time Sent: " + chat.getTimeSent());
+                printWriter.println("Chat:" + (chatNum));
+                printWriter.println("ID:" + chat.getId());
+                printWriter.println("Participant 1:" + chat.getParticipant1PhoneNumber());
+                printWriter.println("Participant 2:" + chat.getParticipant2PhoneNumber());
+                printWriter.println("Time Sent:" + chat.getTimeSent());
                 printWriter.println("Messages:");
                 for (Message message : chat.getMessages()) {
-                    printWriter.println("  Message ID: " + message.getId());
-                    printWriter.println("  From: " + message.getFrom());
-                    printWriter.println("  Content: " + message.getMessageContent());
-                    printWriter.println("  Time: " + message.getTimeSent());
-                    printWriter.println("  Read: " + message.isRead());
-                    printWriter.println("  Liked: " + message.isLiked());
+                    printWriter.println("Message ID:" + message.getId());
+                    printWriter.println("From:" + message.getFrom());
+                    printWriter.println("Content:" + message.getMessageContent());
+                    printWriter.println("Time:" + message.getTimeSent());
+                    printWriter.println("Read:" + message.isRead());
+                    printWriter.println("Liked:" + message.isLiked());
                 }
                 chatNum++;
             }
-        } catch (Exception e) {
+        } catch (Exception e) 
+        {
             System.out.println("Sorry, there has been a problem opening or writing to the file");
             System.out.println("/t" + e);
-        } finally {
+        } finally 
+        {
             if (printWriter != null)
                 printWriter.close(); // close the file
         }
@@ -133,11 +149,17 @@ public class SaveLoadPage extends JPanel {
                         if (line.startsWith("Chat :")) {
                             String participant1 = reader.readLine().split(": ")[1];
                             String participant2 = reader.readLine().split(": ")[1];
-                            LocalDateTime timeSent = LocalDateTime.parse(reader.readLine().split(": ")[1]);
-                            chat = new Chat(timeSent, participant1, participant2);
+                            String nextLine = reader.readLine();
+                            LocalDateTime chatTimeSent;
+                            if (nextLine.startsWith("Time Sent:")) {
+                                chatTimeSent = LocalDateTime.parse(nextLine.split(": ")[1]);
+                                reader.readLine(); // Skip "Messages:" line
+                            } else {
+                                chatTimeSent = LocalDateTime.now();
+                                // nextLine is "Messages:", already read, no skip
+                            }
+                            chat = new Chat(chatTimeSent, participant1, participant2);
                             profile.getChatManager().addChat(chat);
-
-                            reader.readLine(); // Skip "Messages:" line
                             while ((line = reader.readLine()) != null && !line.startsWith("Chat :")) {
                                 if (line.startsWith("Message ID: ")) {
                                     String messageId = line.split(": ")[1];
@@ -147,7 +169,7 @@ public class SaveLoadPage extends JPanel {
                                     boolean read = Boolean.parseBoolean(reader.readLine().split(": ")[1]);
                                     boolean liked = Boolean.parseBoolean(reader.readLine().split(": ")[1]);
 
-                                    Message message = new Message(messageId, chat.getId(), from, content, timeSent);
+                                    Message message = new Message(messageId, chat.getId(), from, content, time);
                                     message.setRead(read);
                                     message.setLiked(liked);
                                     chat.addMessage(message);
@@ -158,31 +180,49 @@ public class SaveLoadPage extends JPanel {
                             }
                         }
                     }
+                    System.out.println("loading profile from file.");
                 }
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("Sorry, your file was not found.");
-        } catch (IOException e) {
-            System.out.println("Sorry, there has been a problem reading the file.");
-        } finally {
+            JOptionPane.showMessageDialog(this, "Profile loaded successfully!");
+        }catch (FileNotFoundException e)
+		{
+		    JOptionPane.showMessageDialog(this, "File not found: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		} 
+        catch (Exception e) 
+        {
+            JOptionPane.showMessageDialog(this, "Error loading profile: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } finally 
+        {
             try {
                 if (reader != null) {
-                    reader.close(); // close the file
+                    reader.close();
                 }
-            } catch (IOException e) {
-                System.out.println("Sorry, there has been a problem closing the file.");
+            } catch (IOException e) 
+            {
+                JOptionPane.showMessageDialog(this, "Error closing file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-        JOptionPane.showMessageDialog(this, "Profile loaded successfully!");
     }
 
+    /*
+     * Helper method to open a file chooser and allow the user to select a profile file to load
+     * It then creates a new File object for the selected file
+     */
     private void chooseProfileFileAndLoad() 
     {
+        // Open a file chooser dialog to selcet the profile file to load
         JFileChooser fileChooser = new JFileChooser();
+
+        // Set the current directory to the user's home directory and filter for .txt files
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
         fileChooser.setFileFilter(new FileNameExtensionFilter("Profile Files", "txt"));
         int result = fileChooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
+
+        // If statement to check if the user selected a file and clicked "Open"
+        if (result == JFileChooser.APPROVE_OPTION) 
+        {
+            // Get the selected file and call the method to load the profile from that file
             File selectedFile = fileChooser.getSelectedFile();
             loadProfileFromFile(selectedFile);
         }

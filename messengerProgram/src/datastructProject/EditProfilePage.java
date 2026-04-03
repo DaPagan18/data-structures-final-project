@@ -24,6 +24,8 @@ public class EditProfilePage extends JPanel {
     String profilePicPath;
     
     JLabel profileImageLabel = new JLabel();
+    private JLabel usernameValueLabel;
+    private JLabel phoneValueLabel;
 
     public EditProfilePage(Profile profile) {
         this.profile = profile;
@@ -60,30 +62,30 @@ public class EditProfilePage extends JPanel {
 
         JPanel usernameRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setFont(font);
-        usernameRow.add(usernameLabel);
+        JLabel usernameTitleLabel = new JLabel("Username:");
+        usernameTitleLabel.setFont(font);
+        usernameRow.add(usernameTitleLabel);
 
-        JLabel username = new JLabel(usernameText);
-        usernameRow.add(username);
+        usernameValueLabel = new JLabel(usernameText);
+        usernameRow.add(usernameValueLabel);
 
         JButton usernameButton = new JButton("Edit");
         usernameButton.addActionListener(e -> { usernameText = editComponent("Username");
             if (!usernameText.isEmpty()) {
                 profile.setName(usernameText);
-                username.setText(profile.getName());
+                usernameValueLabel.setText(profile.getName());
             }
         });
         usernameRow.add(usernameButton);
 
         JPanel sPhoneNumberRow = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        JLabel sPhoneNumberLabel = new JLabel("Phone Number:");
-        sPhoneNumberLabel.setFont(font);
-        sPhoneNumberRow.add(sPhoneNumberLabel);
+        JLabel phoneTitleLabel = new JLabel("Phone Number:");
+        phoneTitleLabel.setFont(font);
+        sPhoneNumberRow.add(phoneTitleLabel);
 
-        JLabel sPhoneNumber = new JLabel(sPhoneNumberText);
-        sPhoneNumberRow.add(sPhoneNumber);
+        phoneValueLabel = new JLabel(sPhoneNumberText);
+        sPhoneNumberRow.add(phoneValueLabel);
 
         panel.add(usernameRow);
         panel.add(sPhoneNumberRow);
@@ -138,6 +140,22 @@ public class EditProfilePage extends JPanel {
                 ex.printStackTrace();
                 System.out.println("Error loading image");
             }
+        }
+    }
+
+    public void refresh() {
+        usernameValueLabel.setText(profile.getName());
+        phoneValueLabel.setText(profile.getPhoneNumber());
+        // Update profile picture if needed
+        String pathToLoad = profile.getProfilePicPath().isEmpty()
+                ? "messengerProgram/src/datastructProject/images/profilePicture.png"
+                : profile.getProfilePicPath();
+        try {
+            BufferedImage profileImage = ImageIO.read(new File(pathToLoad));
+            Image scaledProfileImage = profileImage.getScaledInstance(250, 250, Image.SCALE_DEFAULT);
+            profileImageLabel.setIcon(new ImageIcon(scaledProfileImage));
+        } catch (IOException ex) {
+            System.out.println("Error loading image");
         }
     }
 }

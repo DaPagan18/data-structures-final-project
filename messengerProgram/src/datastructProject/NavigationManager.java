@@ -56,6 +56,9 @@ public class NavigationManager {
                 ((ChatPage) pages.get(pageName)).updateChat(chat);
             }
         }
+        if (pageName.equals("EditProfile") && pages.containsKey(pageName)) {
+            ((EditProfilePage) pages.get(pageName)).refresh();
+        }
         cardLayout.show(cardPanel, pageName);
     }
 

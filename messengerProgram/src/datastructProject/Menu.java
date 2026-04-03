@@ -16,6 +16,7 @@ public class Menu {
     //adding a test profile to the user registry to simulate another user being on the system
     private Profile testProfile = new Profile("Calum", "075", "messengerProgram/src/datastructProject/images/calumProfilePic.png", userRegistry);
     private Profile testProfile2 = new Profile("Daniel","123","", userRegistry);
+    private Profile testProfile3 = new Profile("CalumS","456","", userRegistry);
     
     public Menu() throws IOException {
 
@@ -60,6 +61,13 @@ public class Menu {
         cardPanel.add(editProfilePanel, "Edit Profile");
         cardPanel.add(savePanel, "Save/Load");
 
+        // Register pages with NavigationManager
+        NavigationManager.getInstance().registerPage(homePanel, "Home");
+        NavigationManager.getInstance().registerPage(contactsPanel, "Contacts");
+        NavigationManager.getInstance().registerPage(searchPanel, "Search");
+        NavigationManager.getInstance().registerPage(editProfilePanel, "Edit Profile");
+        NavigationManager.getInstance().registerPage(savePanel, "Save/Load");
+
         // Add chat pages dynamically
         for (Chat chat : chatManager.getChatsList()) {
             ChatPage chatPage = new ChatPage(chat, chatManager);
@@ -69,7 +77,7 @@ public class Menu {
         dropdown.addActionListener(e -> {
             String selected = (String) dropdown.getSelectedItem();
             if (selected != null) {
-                cards.show(cardPanel, selected);
+                NavigationManager.getInstance().navigateTo(selected);
             }
         });
 
