@@ -180,7 +180,6 @@ public class SaveLoadPage extends JPanel {
                             }
                         }
                     }
-                    System.out.println("loading profile from file.");
                 }
             }
             JOptionPane.showMessageDialog(this, "Profile loaded successfully!");
