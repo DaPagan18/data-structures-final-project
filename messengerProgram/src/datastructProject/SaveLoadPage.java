@@ -3,15 +3,15 @@ package datastructProject;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.File;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class SaveLoadPage extends JPanel {
 
@@ -36,7 +36,7 @@ public class SaveLoadPage extends JPanel {
         saveButton.addActionListener(e -> saveProfile());
 
         JButton loadButton = new JButton("Load Profile");
-        loadButton.addActionListener(e -> loadProfile());
+        loadButton.addActionListener(e -> chooseProfileFileAndLoad());
 
         buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonBar.add(saveButton);
@@ -102,10 +102,10 @@ public class SaveLoadPage extends JPanel {
         JOptionPane.showMessageDialog(this, "Profile saved successfully!");
     }
 
-    private void loadProfile() {
+    private void loadProfileFromFile(File file) {
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new FileReader("profile_[ " + profile.getName() + "].txt"));
+            reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.equals("[PROFILE]")) {
@@ -175,4 +175,17 @@ public class SaveLoadPage extends JPanel {
         }
         JOptionPane.showMessageDialog(this, "Profile loaded successfully!");
     }
+
+    private void chooseProfileFileAndLoad() 
+    {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Profile Files", "txt"));
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            loadProfileFromFile(selectedFile);
+        }
+    }
+
 }
