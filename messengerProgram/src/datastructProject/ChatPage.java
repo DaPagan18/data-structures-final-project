@@ -10,14 +10,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.*;
 
-public class ChatPage extends JPanel {
+public class ChatPage extends JPanel 
+{
     private Chat currentChat;
     private final ChatManager chatManager;
     private final JPanel messagesPanel;
     private JTextArea messageInput;
     private JLabel chatTitleLabel;
 
-    public ChatPage(Chat chat, ChatManager chatManager) {
+    // ### CONSTRUCTOR ### //
+    /**
+     * Constructor for creating a ChatPage instance with the specified chat and chat manager.
+     * 
+     * @param chat The chat to be displayed on this page
+     * @param chatManager The chat manager responsible for handling chat operations
+     */
+    public ChatPage(Chat chat, ChatManager chatManager) 
+    {
         this.currentChat = chat;
         this.chatManager = chatManager;
         chatManager.markAllMessagesAsRead(chat.getId());
@@ -39,7 +48,13 @@ public class ChatPage extends JPanel {
         loadChatMessages();
     }
     
-    private JPanel createHeaderPanel() {
+    /**
+     * Creates the header panel for the chat page.
+     * 
+     * @return JPanel The header panel
+     */
+    private JPanel createHeaderPanel() 
+    {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         headerPanel.setBackground(new Color(240, 240, 240));
@@ -64,10 +79,11 @@ public class ChatPage extends JPanel {
                 "Confirm Delete Chat",
                 JOptionPane.YES_NO_OPTION
             );
-            if (confirm == JOptionPane.YES_OPTION) {
-                chatManager.deleteChat(currentChat.getId());
-                NavigationManager.getInstance().navigateTo("Home");
-            }
+            if (confirm == JOptionPane.YES_OPTION) 
+                {
+                    chatManager.deleteChat(currentChat.getId());
+                    NavigationManager.getInstance().navigateTo("Home");
+                }
         });
         
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -79,7 +95,13 @@ public class ChatPage extends JPanel {
         return headerPanel;
     }
     
-    private JPanel createInputPanel() {
+    /**
+     * Creates the input panel for sending new messages.
+     * 
+     * @return JPanel The input panel
+     */
+    private JPanel createInputPanel() 
+    {
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
@@ -97,24 +119,40 @@ public class ChatPage extends JPanel {
         return inputPanel;
     }
     
-    private void loadChatMessages() {
+    /**
+     * Loads the messages for the current chat and displays them in the messages panel.
+     */
+    private void loadChatMessages() 
+    {
         messagesPanel.removeAll();
         
         List<Message> messages = currentChat.getMessages();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         
-        for (Message message : messages) {
-            JPanel messagePanel = createMessagePanel(message, formatter);
-            messagesPanel.add(messagePanel);
-            messagesPanel.add(Box.createVerticalStrut(5));
-        }
-        
+        // Iterate through messages and create a panel for each message
+        for (Message message : messages) 
+            {
+                JPanel messagePanel = createMessagePanel(message, formatter);
+                messagesPanel.add(messagePanel);
+                messagesPanel.add(Box.createVerticalStrut(5));
+            }
+        // Add vertical glue to push messages to the top
         messagesPanel.add(Box.createVerticalGlue());
+        
+        // Refresh the messages panel
         messagesPanel.revalidate();
         messagesPanel.repaint();
     }
     
-    private JPanel createMessagePanel(Message message, DateTimeFormatter formatter) {
+    /**
+     * Creates a panel for displaying a single message.
+     * 
+     * @param message The message to be displayed
+     * @param formatter The formatter for displaying the message timestamp
+     * @return JPanel The panel representing the message
+     */
+    private JPanel createMessagePanel(Message message, DateTimeFormatter formatter) 
+    {
         JPanel messagePanel = new JPanel();
         messagePanel.setLayout(new BorderLayout());
         messagePanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
@@ -130,6 +168,7 @@ public class ChatPage extends JPanel {
         } else {
             senderName = currentChat.getContactName();
         }
+        
         JLabel senderLabel = new JLabel(senderName);
         senderLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         contentPanel.add(senderLabel);
@@ -161,11 +200,12 @@ public class ChatPage extends JPanel {
         });
         buttonsPanel.add(likeButton);
         
-        if (isFromMe) {
-            JButton deleteButton = new JButton("Delete");
-            deleteButton.setFont(new Font("Sans Serif", Font.PLAIN, 10));
-            deleteButton.setForeground(Color.RED);
-            deleteButton.addActionListener(e -> {
+        if (isFromMe) 
+            {
+                JButton deleteButton = new JButton("Delete");
+                deleteButton.setFont(new Font("Sans Serif", Font.PLAIN, 10));
+                deleteButton.setForeground(Color.RED);
+                deleteButton.addActionListener(e -> {
                 chatManager.deleteMessage(currentChat.getId(), message.getId());
                 loadChatMessages();
             });
@@ -177,21 +217,40 @@ public class ChatPage extends JPanel {
         return messagePanel;
     }
     
-    private void sendMessage() {
+    /**
+     * Sends a new message based on the content entered in the message input area.
+     */
+    private void sendMessage() 
+    {
         String messageContent = messageInput.getText().trim();
-        if (messageContent.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter a message", "Empty Message", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
         
+        // Validate that the message is not empty before sending
+        if (messageContent.isEmpty()) 
+            {
+                JOptionPane.showMessageDialog(this, "Please enter a message", "Empty Message", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        
+        // Send the message using the chat manager and refresh the chat messages
         chatManager.sendMessage(currentChat.getId(), "You", messageContent);
         messageInput.setText("");
         loadChatMessages();
     }
     
-    public void updateChat(Chat chat) {
+    /**
+     * Updates the chat page with a new chat, marking all messages as read and refreshing the display.
+     * 
+     * @param chat The new chat to be displayed on the page
+     */
+    public void updateChat(Chat chat) 
+    {
+        // Update the current chat reference
         this.currentChat = chat;
+        
+        // Mark all messages as read when updating the chat
         chatManager.markAllMessagesAsRead(chat.getId());
+        
+        // Update the chat title and reload messages to reflect the new chat
         chatTitleLabel.setText(currentChat.getContactName());
         loadChatMessages();
     }

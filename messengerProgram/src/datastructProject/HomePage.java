@@ -86,7 +86,7 @@ public class HomePage extends JPanel
      * Creates a panel for a specific chat
      * 
      * @param chat The chat for which to create the panel
-     * @return A JPanel representing the chat, with the contact name, last message preview, and buttons to open or delete the chat
+     * @return JPanel A JPanel representing the chat, with the contact name, last message preview, and buttons to open or delete the chat
      */
     private JPanel createChatPanel(Chat chat) 
     {

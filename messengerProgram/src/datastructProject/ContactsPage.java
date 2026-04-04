@@ -28,7 +28,7 @@ public class ContactsPage extends JPanel
 
 
     // ### CONSTRUCTOR ### //
-    /*
+    /**
      * Overloaded constructor for creating a ContactsPage instance.
      *
      * @param profile The profile of the user.
@@ -86,7 +86,9 @@ public class ContactsPage extends JPanel
     }
     
     /** 
-     * Adds a single row for the given contact into the scrollable list. 
+     * Private helper method to add a single row for the given contact into the scrollable list. 
+     * 
+     * @param contact The contact for which a row should be added to the list
     */
     private void addContactRow(Contact contact) 
     {
@@ -110,7 +112,9 @@ public class ContactsPage extends JPanel
     }
 
     /** 
-     * Deletes the given contact after confirming with the user, then refreshes the list. 
+     * Private helper method to delete the given contact after confirming with the user
+     * 
+     * @param contact The contact to be deleted
      */
     private void deleteContact(Contact contact) 
     {
@@ -142,7 +146,7 @@ public class ContactsPage extends JPanel
     }
 
     /**
-     * Opens a dialog asking the user for a name and phone number,
+     * Private helper method to open a dialog asking the user for a name and phone number,
      * then creates a Contact, adds it to the contact manager, and
      * appends a row to the scrollable list.
      */
@@ -203,25 +207,33 @@ public class ContactsPage extends JPanel
             java.time.LocalDateTime timeA = null;
             java.time.LocalDateTime timeB = null;
 
-            if (chatManager.checkForChat(profile.getPhoneNumber(), a.getPhoneNumber())) {
-                Chat chatA = chatManager.getOrCreateChatForContact(profile.getPhoneNumber(), a.getPhoneNumber());
-                Message lastA = chatA.getLastMessage();
-                if (lastA != null) 
-                    {
-                        timeA = lastA.getTimeSent();
-                    }
-            }
+            // If statement to check if there is a chat with contact A
+            if (chatManager.checkForChat(profile.getPhoneNumber(), a.getPhoneNumber())) 
+                {
+                    // If there is a chat, get the last message and its time sent
+                    Chat chatA = chatManager.getOrCreateChatForContact(profile.getPhoneNumber(), a.getPhoneNumber());
+                    Message lastA = chatA.getLastMessage();
+                    // If there is a last message, get its time sent
+                    if (lastA != null) 
+                        {
+                            timeA = lastA.getTimeSent();
+                        }
+                }
 
+            // If statement to check if there is a chat with contact B
             if (chatManager.checkForChat(profile.getPhoneNumber(), b.getPhoneNumber())) 
                 {
+                    // If there is a chat, get the last message and its time sent
                     Chat chatB = chatManager.getOrCreateChatForContact(profile.getPhoneNumber(), b.getPhoneNumber());
                     Message lastB = chatB.getLastMessage();
+                    // If there is a last message, get its time sent
                     if (lastB != null) 
                         {
                             timeB = lastB.getTimeSent();
                         }
                 }
 
+            // If statement to handle cases where one or both contacts have no messages
             if (timeA == null && timeB == null) 
                 {
                     return 0;
@@ -234,9 +246,11 @@ public class ContactsPage extends JPanel
                         {
                             return -1;
                         }
+            // If both contacts have messages, sort by most recent time (descending order)
             return timeB.compareTo(timeA);
         });
 
+        // After sorting, refresh the list to update the display
         refreshList(sorted);
     }
 
@@ -252,7 +266,9 @@ public class ContactsPage extends JPanel
     }
 
     /**
-     * Clears the contact list panel and redraws it using the provided ordered list.
+     * Clears the contact list panel and redraws it using the provided ordered list
+     * 
+     * @param contacts The list of contacts to display, in the order they should be displayed in
      */
     private void refreshList(List<Contact> contacts) 
     {

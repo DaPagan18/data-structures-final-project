@@ -46,7 +46,7 @@ public class SearchPage extends JPanel
     /**
      * Private method to create the panel for displaying search results.
      *
-     * @return The panel containing the search results.
+     * @return JPanel The panel containing the search results.
      */
     private JPanel createSearchResultsPanel() 
     {
@@ -150,7 +150,7 @@ public class SearchPage extends JPanel
      * Private helper method to create an individual button for each search result.
      *
      * @param result The search result for which to create a button
-     * @return The created button
+     * @return JButton The created button that diplays chat details
      */
     private JButton createResultButton(SearchResult result) 
     {

@@ -1,5 +1,6 @@
 /**
- * ContactProfilePage class represents the profile page of a contact in the messenger application. It displays the contact's phone number, profile picture, and recent messages received from that contact.
+ * ContactProfilePage class represents the profile page of a contact in the messenger application. 
+ * It displays the contact's phone number, profile picture, and recent messages received from that contact.
  * 
  * @author Calum Davies
  */
@@ -26,7 +27,7 @@ public class ContactProfilePage extends JPanel
     private String currentUserPhone;
 
     // ### CONSTRUCTOR ### //
-    /*
+    /**
      * Overloaded constructor for creating a ContactProfilePage instance.
      *
      * @param profile The profile of the user.
@@ -77,17 +78,28 @@ public class ContactProfilePage extends JPanel
         add(centerPanel, BorderLayout.CENTER);
     }
 
-    public void setPage(Contact contact) {
+    /**
+     * Sets the contact information on the profile page, including phone number,
+     * profile picture, and recent messages received from that contact.
+     *
+     * @param contact The contact whose information should be displayed.
+     */
+    public void setPage(Contact contact) 
+    {
         currentContact = contact;
         phoneLabel.setText("Phone: " + contact.getPhoneNumber());
 
         String picPath = contact.getProfilePicPath();
         String pathToLoad;
-        if (picPath == null || picPath.isEmpty()) {
+
+        // If the contact doesn't have a profile picture, load the default one
+        if (picPath == null || picPath.isEmpty()) 
+            {
             pathToLoad = "messengerProgram/src/datastructProject/images/profilePicture.png";
         } else {
             pathToLoad = picPath;
         }
+        
         try {
             BufferedImage img = ImageIO.read(new File(pathToLoad));
             Image scaled = img.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -97,46 +109,58 @@ public class ContactProfilePage extends JPanel
             System.out.println("Could not load profile picture: " + pathToLoad);
         }
 
+        // Clear previous messages
         recentMessagesPanel.removeAll();
 
+        // Check for messages from this contact and display the 3 most recent ones
         String currentPhone = NavigationManager.getInstance().getCurrentUserPhone();
-        if(!chatManager.checkForChat(currentPhone, currentContact.getPhoneNumber())){
+        
+        if(!chatManager.checkForChat(currentPhone, currentContact.getPhoneNumber()))
+            {
             recentMessagesPanel.setBorder(BorderFactory.createTitledBorder("No messages received from this contact"));
         }
         else{
             recentMessagesPanel.setBorder(BorderFactory.createTitledBorder("Recent messages from this contact:"));
             Chat chat = chatManager.getOrCreateChatForContact(currentPhone, currentContact.getPhoneNumber());
+            
+            // Get all messages in the chat and filter for those sent by the contact, displaying the 3 most recent ones
             List<Message> messages = chat.messages.getAll();
             int count = 0;
             int messageIndexCounter = 1;
 
-            while(count != 3 && messageIndexCounter <= messages.size()){
-                if(messages.get(messages.size()-messageIndexCounter).getFrom().equals(contact.getPhoneNumber())){
-                    recentMessagesPanel.add(new JLabel(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(messages.get(messages.size() - messageIndexCounter).getTimeSent())));
-                    recentMessagesPanel.add(new JLabel(messages.get(messages.size() - messageIndexCounter).getMessageContent()));
+            while(count != 3 && messageIndexCounter <= messages.size())
+                {
+                    // Check if the message was sent by the contact, if so display it, otherwise skip to the next message
+                    if(messages.get(messages.size()-messageIndexCounter).getFrom().equals(contact.getPhoneNumber()))
+                        {
+                            recentMessagesPanel.add(new JLabel(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(messages.get(messages.size() - messageIndexCounter).getTimeSent())));
+                            recentMessagesPanel.add(new JLabel(messages.get(messages.size() - messageIndexCounter).getMessageContent()));
 
-                    messageIndexCounter++;
-                    count++;
+                            // Increment the message index counter and the count of messages displayed
+                            messageIndexCounter++;
+                            count++;
+                        }
+                    else{
+                        // Else increment the message index counter to check the next most recent message
+                        messageIndexCounter++;
+                        }
                 }
-                else{
-                    messageIndexCounter++;
-                }
-            }
         }
-  
-
+        // Refresh the panel to show the updated information
         revalidate();
         repaint();
     }
 
-    private void openChat(){
+    /**
+     * Private helper method to open the chat page for the current contact.
+     * Method retrieves or creates a chat for the contact and navigates to the corresponding chat page.
+     */
+    private void openChat()
+    {
         Chat chat = chatManager.getOrCreateChatForContact(NavigationManager.getInstance().getCurrentUserPhone(), currentContact.getPhoneNumber());
         ChatPage newChatPage = new ChatPage(chat, chatManager);
 
         NavigationManager.getInstance().registerPage(newChatPage, "Chat_" + chat.getId());
         NavigationManager.getInstance().navigateTo("Chat_" + chat.getId());
-    }
-
-  
-
+    }  
 }

@@ -15,7 +15,13 @@ public class Profile implements Iterable<Contact>
     private String profilePicPath;
     private final HashMap<String, Contact> contactsByNumber = new HashMap<>();
 
-    //creates an empty profile ready to be edited
+    /// ### CONSTRUCTORS ### //
+    /**
+     * Default constructor for creating a Profile instance
+     * Generates a unique phone number and adds it to the user registry.
+     * 
+     * @param userRegistry The user registry to which the profile will be added
+     */
     public Profile(UserRegistry userRegistry) 
     {
         this.name = "";
@@ -24,8 +30,14 @@ public class Profile implements Iterable<Contact>
         userRegistry.addProfile(this);
     }
 
-  
-    //this contsructor is currently used to create test profiles
+    /**
+     * Overloaded constructor for creating a Profile instance with specified name and profile picture path
+     * Generates a unique phone number and adds it to the user registry.
+     * 
+     * @param name The name of the profile
+     * @param profilePicPath The path to the profile picture
+     * @param userRegistry The user registry to which the profile will be added
+     */
     public Profile(String name, String profilePicPath, UserRegistry userRegistry)
     {
         this.name = name;
@@ -37,8 +49,14 @@ public class Profile implements Iterable<Contact>
 
     /** This constructor should be able to be used for loading profile/profiles from a save.
      * This is also used to create test profiles used for the demonstration.
+     * 
+     * @param name The name of the profile
+     * @param phoneNumber The phone number of the profile
+     * @param profilePicPath The path to the profile picture
+     * @param userRegistry The user registry to which the profile will be added
      */
-    public Profile(String name, String phoneNumber, String profilePicPath, UserRegistry userRegistry) {
+    public Profile(String name, String phoneNumber, String profilePicPath, UserRegistry userRegistry) 
+    {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.profilePicPath = profilePicPath;
@@ -180,7 +198,7 @@ public class Profile implements Iterable<Contact>
      * Generates a unique phone number for the profile
      * 
      * @param userRegistry The user registry to check for existing phone numbers
-     * @return String The unique phone number
+     * @return String The unique phone number as a string
      */
     private String generateUniquePhoneNumber(UserRegistry userRegistry)
     {

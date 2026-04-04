@@ -33,6 +33,9 @@ public class SaveLoadPage extends JPanel
     /**
      * ### CONSTRUCTOR ###
      * Initializes the UI components and sets up the layout
+     * 
+     * @param profile The profile to be saved or loaded
+     * @param userRegistry The user registry to access the profile's contacts and manage profiles 
      */
     public SaveLoadPage(Profile profile, UserRegistry userRegistry) 
     {
