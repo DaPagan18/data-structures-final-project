@@ -14,9 +14,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class EditProfilePage extends JPanel {
+public class EditProfilePage extends JPanel 
+{
     Font font = new java.awt.Font("Sans Serif", java.awt.Font.BOLD, 18);
-
   
     Profile profile;
     String usernameText;
@@ -27,7 +27,8 @@ public class EditProfilePage extends JPanel {
     private JLabel usernameValueLabel;
     private JLabel phoneValueLabel;
 
-    public EditProfilePage(Profile profile) {
+    public EditProfilePage(Profile profile) 
+    {
         this.profile = profile;
         this.usernameText = profile.getName();
         this.sPhoneNumberText = profile.getPhoneNumber();
@@ -93,7 +94,14 @@ public class EditProfilePage extends JPanel {
         add(panel, BorderLayout.CENTER);
     }
 
-    private String editComponent(String type) {
+    /*
+     * Private helper method to edit a component and return the updated value
+     *
+     * @param type The type of component being edited (e.g., "Username", "Phone Number")
+     * @return String The updated value entered by the user, or an empty string if cancelled 
+     */
+    private String editComponent(String type) 
+    {
         JTextField field = new JTextField(20);
 
         JPanel form = new JPanel(new GridLayout(1, 2, 8, 8));
@@ -102,33 +110,46 @@ public class EditProfilePage extends JPanel {
 
         int result = JOptionPane.showConfirmDialog(this, form, "Edit " + type, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-        if (result == JOptionPane.OK_OPTION) {
-            String input = field.getText().trim();
-            if (input.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Field cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
-                return "";
+        // If statememt to check whether the user clicked OK or Cancel
+        if (result == JOptionPane.OK_OPTION) 
+            {
+                String input = field.getText().trim();
+                if (input.isEmpty()) 
+                    {
+                        // Show error message if the input is empty
+                        JOptionPane.showMessageDialog(this, "Field cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+                        // Return empty string to indicate no change
+                        return "";
+                    }
+                return input;
             }
-            return input;
-        }
         return "";
     }
 
-    private void changeProfilePicture() {
+    /*
+     * Private method to change the profile picture
+     */
+    private void changeProfilePicture() 
+    {
         JPanel form = new JPanel(new GridLayout(1, 2, 8, 8));
         form.add(new JLabel("Change Profile Picture:"));
         JButton upload = new JButton("Upload");
         upload.addActionListener(e -> changedPic());
         form.add(upload);
 
-
         int result = JOptionPane.showConfirmDialog(this, form, "Change Profile Picture", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
     }
     
-    private void changedPic() {
+    /*
+     * Private helper method to handle the profile picture change process
+     */ 
+    private void changedPic() 
+    {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
         int result = fileChooser.showOpenDialog(getParent());
-        if (result == JFileChooser.APPROVE_OPTION) {
+        if (result == JFileChooser.APPROVE_OPTION) 
+            {
             try {
                 File file = fileChooser.getSelectedFile();
                 profilePicPath = file.getAbsolutePath();
@@ -136,16 +157,23 @@ public class EditProfilePage extends JPanel {
                 BufferedImage picture = ImageIO.read(file);
                 Image scaledPicture = picture.getScaledInstance(250, 250, Image.SCALE_DEFAULT);
                 profileImageLabel.setIcon(new ImageIcon(scaledPicture));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                System.out.println("Error loading image");
+                } catch (IOException ex) 
+                {
+                    // Print stack trace for debugging and show error message to user
+                    ex.printStackTrace();
+                    System.out.println("Error loading image");
+                }
             }
-        }
     }
 
-    public void refresh() {
+    /*
+     * Method to refresh the profile information displayed on the page
+     */
+    public void refresh() 
+    {
         usernameValueLabel.setText(profile.getName());
         phoneValueLabel.setText(profile.getPhoneNumber());
+        
         // Update profile picture if needed
         String pathToLoad = profile.getProfilePicPath().isEmpty()
                 ? "messengerProgram/src/datastructProject/images/profilePicture.png"
@@ -154,7 +182,8 @@ public class EditProfilePage extends JPanel {
             BufferedImage profileImage = ImageIO.read(new File(pathToLoad));
             Image scaledProfileImage = profileImage.getScaledInstance(250, 250, Image.SCALE_DEFAULT);
             profileImageLabel.setIcon(new ImageIcon(scaledProfileImage));
-        } catch (IOException ex) {
+        } catch (IOException ex) 
+        {
             System.out.println("Error loading image");
         }
     }
