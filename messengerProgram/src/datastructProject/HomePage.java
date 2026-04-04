@@ -16,6 +16,12 @@ public class HomePage extends JPanel
     private final ChatManager chatManager;
     private final JPanel chatsListPanel;
 
+    /// ### CONSTRUCTOR ### //
+    /**
+     * Overloaded constructor for creating a HomePage instance.
+     *
+     * @param chatManager The chat manager for handling chat operations.
+     */
     public HomePage(ChatManager chatManager) 
     {
         this.chatManager = chatManager;
@@ -48,7 +54,7 @@ public class HomePage extends JPanel
         });
     }
 
-    /*
+    /**
      * Private method to load the list of chats into the home page
      */
     private void loadChats() 
@@ -68,7 +74,7 @@ public class HomePage extends JPanel
         chatsListPanel.repaint();
     }
 
-    /*
+    /**
      * Refreshes the list of chats on the home page
      */
     public void refresh() 
@@ -76,8 +82,11 @@ public class HomePage extends JPanel
         loadChats();
     }
 
-    /*
+    /**
      * Creates a panel for a specific chat
+     * 
+     * @param chat The chat for which to create the panel
+     * @return A JPanel representing the chat, with the contact name, last message preview, and buttons to open or delete the chat
      */
     private JPanel createChatPanel(Chat chat) 
     {

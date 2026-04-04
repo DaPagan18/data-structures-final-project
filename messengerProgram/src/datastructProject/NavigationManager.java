@@ -22,7 +22,7 @@ public class NavigationManager
     // Private constructor to prevent instantiation from outside the class
     private NavigationManager() {}
 
-    /*
+    /**
      * Gets the singleton instance of the NavigationManager
      * 
      * @return NavigationManager The instance of the NavigationManager
@@ -37,7 +37,7 @@ public class NavigationManager
         return instance;
     }
 
-    /*
+    /**
      * Registers the card layout and card panel for navigation
      * 
      * @param cardLayout The card layout to register
@@ -49,7 +49,7 @@ public class NavigationManager
         this.cardPanel = cardPanel;
     }
 
-    /*
+    /**
      * Stores the chat manager for use in navigation
      * 
      * @param chatManager The chat manager to store
@@ -59,7 +59,7 @@ public class NavigationManager
         this.chatManager = chatManager;
     }
 
-    /*
+    /**
      * Gets the stored chat manager
      * 
      * @return ChatManager The stored chat manager
@@ -69,7 +69,7 @@ public class NavigationManager
         return chatManager;
     }
 
-    /*
+    /**
      * Stores the user registry and current user phone number for use in navigation
      * 
      * @param userRegistry The user registry to store
@@ -81,7 +81,7 @@ public class NavigationManager
         this.currentUserPhone = currentUserPhone;
     }
 
-    /*
+    /**
      * Gets the stored user registry
      * 
      * @return UserRegistry The stored user registry
@@ -91,7 +91,7 @@ public class NavigationManager
         return userRegistry;
     }
 
-    /*
+    /**
      * Gets the phone number of the current user
      * 
      * @return String The phone number of the current user
@@ -101,7 +101,7 @@ public class NavigationManager
         return currentUserPhone;
     }
 
-    /*
+    /**
      * Navigates to the specified page
      * 
      * @param pageName The name of the page to navigate to
@@ -141,7 +141,7 @@ public class NavigationManager
         cardLayout.show(cardPanel, pageName);
     }
 
-    /*
+    /**
      * Registers a page with the navigation manager
      * 
      * @param page The page to register

@@ -19,7 +19,7 @@ public class Message
     private boolean liked;
 
     // ### CONSTRUCTORS ### //
-    /*
+    /**
      * Default constructor for creating a new Message instance
      */
     public Message() 
@@ -33,7 +33,7 @@ public class Message
         this.liked = false;
     }
 
-    /*
+    /**
      * Overloaded constructor for creating a new Message instance with specified values
      * 
      * @param id Unique identifier for the message
@@ -54,7 +54,7 @@ public class Message
     }
 
     // ### GETTERS AND SETTERS ### //
-    /*
+    /**
      * Gets the unique identifier for the message
      * 
      * @return String The message ID
@@ -64,7 +64,7 @@ public class Message
         return id;
     }
 
-    /*
+    /**
      * Sets the unique identifier for the message
      * 
      * @param id The message ID
@@ -74,7 +74,7 @@ public class Message
         this.id = id;
     }
 
-    /*
+    /**
      * Gets the identifier for the chat this message belongs to
      * 
      * @return String The chat ID
@@ -84,7 +84,7 @@ public class Message
         return chatId;
     }
 
-    /*
+    /**
      * Sets the identifier for the chat this message belongs to
      * 
      * @param chatId The chat ID
@@ -94,7 +94,7 @@ public class Message
         this.chatId = chatId;
     }
 
-    /*
+    /**
      * Gets the sender of the message
      * 
      * @return String The sender's name or identifier
@@ -104,7 +104,7 @@ public class Message
         return from;
     }
 
-    /*
+    /**
      * Sets the sender of the message
      * 
      * @param from The sender's name or identifier
@@ -114,7 +114,7 @@ public class Message
         this.from = from;
     }
 
-    /*
+    /**
      * Gets the content of the message
      * 
      * @return String The message content
@@ -124,7 +124,7 @@ public class Message
         return messageContent;
     }
 
-    /*
+    /**
      * Sets the content of the message
      * 
      * @param messageContent The message content
@@ -134,7 +134,7 @@ public class Message
         this.messageContent = messageContent;
     }
 
-    /*
+    /**
      * Gets the timestamp of when the message was sent
      * 
      * @return LocalDateTime The time the message was sent
@@ -144,7 +144,7 @@ public class Message
         return timeSent;
     }
 
-    /*
+    /**
      * Sets the timestamp of when the message was sent
      * 
      * @param timeSent The time the message was sent
@@ -154,7 +154,7 @@ public class Message
         this.timeSent = timeSent;
     }
 
-    /*
+    /**
      * Checks if the message has been read
      * 
      * @return boolean True if the message has been read, false otherwise
@@ -164,7 +164,7 @@ public class Message
         return read;
     }
 
-    /*
+    /**
      * Sets the read status of the message
      * 
      * @param read True if the message has been read, false otherwise
@@ -174,7 +174,7 @@ public class Message
         this.read = read;
     }
 
-    /*
+    /**
      * Checks if the message has been liked
      * 
      * @return boolean True if the message has been liked, false otherwise
@@ -184,7 +184,7 @@ public class Message
         return liked;
     }
 
-    /*
+    /**
      * Sets the liked status of the message
      * 
      * @param liked True if the message has been liked, false otherwise

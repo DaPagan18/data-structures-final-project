@@ -24,7 +24,7 @@ public class SearchPage extends JPanel
     private final ChatManager chatManager;
 
     // ### CONSTRUCTOR ### //
-    /*
+    /**
      * Initializes the search page with the list of all chats and the chat manager.
      *
      * @param allChats The list of all chats to search through.
@@ -43,7 +43,7 @@ public class SearchPage extends JPanel
         add(searchResultsPanel);
     }
 
-    /*
+    /**
      * Private method to create the panel for displaying search results.
      *
      * @return The panel containing the search results.
@@ -112,7 +112,7 @@ public class SearchPage extends JPanel
         return panel;
     }
 
-    /*
+    /**
      * Private method to display the search results in the UI.
      *
      * @param results The list of search results to display
@@ -146,7 +146,7 @@ public class SearchPage extends JPanel
         resultsList.repaint();
     }
 
-    /*
+    /**
      * Private helper method to create an individual button for each search result.
      *
      * @param result The search result for which to create a button
@@ -196,7 +196,7 @@ public class SearchPage extends JPanel
     }
 }
 
-/*
+/**
  * ### CLASS FOR MANAGING SEARCH STATE AND PERFORMING SEARCHES ###
  * SearchState - Manages the history of search states using a Stack
  *  to allow users to navigate back through previous searches
@@ -207,7 +207,7 @@ class SearchState
     private final Stack<SearchStateSnapshot> searchHistory;
 
     // ### CONSTRUCTOR ### //
-    /*
+    /**
      * Initializes the search state stack to be empty when a new SearchState object is created
      */
     public SearchState() 
@@ -215,7 +215,7 @@ class SearchState
         this.searchHistory = new Stack<>();
     }
 
-    /*
+    /**
      * Pushes the current search state onto the history stack
      * 
      * @param keyword The search keyword used for the current search
@@ -226,7 +226,7 @@ class SearchState
         searchHistory.push(new SearchStateSnapshot(keyword, new ArrayList<>(results)));
     }
 
-    /*
+    /**
      * Pops the most recent search state from the history stack
      * 
      * @return The popped search state snapshot, or null if the stack is empty
@@ -241,7 +241,7 @@ class SearchState
         return null;
     }
 
-    /*
+    /**
      * Checks if there is a previous search state available to navigate to
      * 
      * @return boolean True if the stack is not empty, false otherwise
@@ -251,7 +251,7 @@ class SearchState
         return !searchHistory.isEmpty();
     }
 
-    /*
+    /**
      * Peeks at the current search state without removing it from the history stack
      * 
      * @return The current search state snapshot, or null if the stack is empty
@@ -265,7 +265,7 @@ class SearchState
         return null;
     }
 
-    /*
+    /**
      * Gets the number of search states currently stored in the history stack
      * 
      * @return The size of the search history stack
@@ -277,7 +277,7 @@ class SearchState
 }
 
 // ### CLASS FOR REPRESENTING A SNAPSHOT OF THE SEARCH STATE ### //
-/*
+/**
  * SearchStateSnapshot - A data class to hold the keyword and results of a search state snapshot when pushed onto the history stack
  */
 class SearchStateSnapshot 
@@ -286,7 +286,7 @@ class SearchStateSnapshot
     public List<SearchResult> results;
 
     // ### CONSTRUCTOR ### //
-    /*
+    /**
      * Initializes the search state snapshot with the given keyword and list of search results
      * 
      * @param keyword The search keyword associated with this snapshot
@@ -300,7 +300,7 @@ class SearchStateSnapshot
 }
 
 // ### CLASS FOR PERFORMING SEARCHES THROUGH CHATS AND MESSAGES ### //
-/* 
+/**
  * SearchService - Provides functionality to perform searches through a list of chats and their messages based on a given keyword
  */
 class SearchService 
@@ -332,7 +332,7 @@ class SearchService
 }
 
 /// ### CLASS FOR REPRESENTING AN INDIVIDUAL SEARCH RESULT ### //
-/*
+/**
  * SearchResult - A simple data class to hold a reference to a chat and a message that matched the search criteria
  */
 class SearchResult 
@@ -341,7 +341,7 @@ class SearchResult
     Message message;
 
     // ### CONSTRUCTOR ### //
-    /*
+    /**
      * Initializes the search result with the given chat and message that matched the search criteria
      * 
      * @param chat The chat in which the matching message was found

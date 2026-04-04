@@ -27,6 +27,12 @@ public class EditProfilePage extends JPanel
     private JLabel usernameValueLabel;
     private JLabel phoneValueLabel;
 
+    // ### CONSTRUCTOR ### //
+    /**
+     * Overloaded constructor for creating an EditProfilePage instance.
+     *
+     * @param profile The profile of the user.
+     */
     public EditProfilePage(Profile profile) 
     {
         this.profile = profile;
@@ -94,7 +100,7 @@ public class EditProfilePage extends JPanel
         add(panel, BorderLayout.CENTER);
     }
 
-    /*
+    /**
      * Private helper method to edit a component and return the updated value
      *
      * @param type The type of component being edited (e.g., "Username", "Phone Number")
@@ -126,7 +132,7 @@ public class EditProfilePage extends JPanel
         return "";
     }
 
-    /*
+    /**
      * Private method to change the profile picture
      */
     private void changeProfilePicture() 
@@ -140,7 +146,7 @@ public class EditProfilePage extends JPanel
         int result = JOptionPane.showConfirmDialog(this, form, "Change Profile Picture", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
     }
     
-    /*
+    /**
      * Private helper method to handle the profile picture change process
      */ 
     private void changedPic() 
@@ -166,7 +172,7 @@ public class EditProfilePage extends JPanel
             }
     }
 
-    /*
+    /**
      * Method to refresh the profile information displayed on the page
      */
     public void refresh() 

@@ -35,8 +35,8 @@ public class Profile implements Iterable<Contact>
     }
 
 
-    /*this constructor should be able to be used for loading profile/profiles from a save.
-    This is also used to create test profiles used for the demonstration.
+    /** This constructor should be able to be used for loading profile/profiles from a save.
+     * This is also used to create test profiles used for the demonstration.
      */
     public Profile(String name, String phoneNumber, String profilePicPath, UserRegistry userRegistry) {
         this.name = name;
@@ -46,7 +46,7 @@ public class Profile implements Iterable<Contact>
     }
 
     // ### GETTERS AND SETTERS ###
-    /*
+    /**
      * Gets the name of the profile
      * 
      * @return String The name of the profile
@@ -56,7 +56,7 @@ public class Profile implements Iterable<Contact>
         return name;
     }
 
-    /*
+    /**
      * Sets the name of the profile
      * 
      * @param name The name to set
@@ -66,7 +66,7 @@ public class Profile implements Iterable<Contact>
         this.name = name;
     }
 
-    /*
+    /**
      * Gets the phone number of the profile
      * 
      * @return String The phone number of the profile
@@ -76,7 +76,7 @@ public class Profile implements Iterable<Contact>
         return phoneNumber;
     }
 
-    /*
+    /**
      * Sets the phone number of the profile
      * 
      * @param phoneNumber The phone number to set
@@ -86,7 +86,7 @@ public class Profile implements Iterable<Contact>
         this.phoneNumber = phoneNumber;
     }
 
-    /*
+    /**
      * Gets the profile picture path of the profile
      * 
      * @return String The profile picture path of the profile
@@ -95,7 +95,7 @@ public class Profile implements Iterable<Contact>
         return profilePicPath;
     }
 
-    /*
+    /**
      * Sets the profile picture path of the profile
      * 
      * @param profilePicPath The profile picture path to set
@@ -105,7 +105,7 @@ public class Profile implements Iterable<Contact>
         this.profilePicPath = profilePicPath;
     }
 
-    /*
+    /**
      * Adds a contact to the profile
      * 
      * @param contact The contact to add
@@ -115,7 +115,7 @@ public class Profile implements Iterable<Contact>
         contactsByNumber.put(contact.getPhoneNumber(), contact);
     }
 
-    /*
+    /**
      * Gets a contact by phone number
      * 
      * @param phoneNumber The phone number of the contact to get
@@ -126,7 +126,7 @@ public class Profile implements Iterable<Contact>
         return contactsByNumber.get(phoneNumber);
     }
 
-    /*
+    /**
      * Removes a contact from the profile
      * 
      * @param phoneNumber The phone number of the contact to remove
@@ -155,7 +155,7 @@ public class Profile implements Iterable<Contact>
         return removed;
     }
 
-    /*
+    /**
      * Checks if the profile has a contact with the given phone number
      * 
      * @param phoneNumber The phone number of the contact to check
@@ -166,7 +166,7 @@ public class Profile implements Iterable<Contact>
         return contactsByNumber.containsKey(phoneNumber);
     }
 
-    /*
+    /**
      * Gets all contacts of the profile
      * 
      * @return HashMap<String, Contact> The map of all contacts
@@ -176,7 +176,7 @@ public class Profile implements Iterable<Contact>
         return contactsByNumber;
     }
 
-    /*
+    /**
      * Generates a unique phone number for the profile
      * 
      * @param userRegistry The user registry to check for existing phone numbers
@@ -202,7 +202,7 @@ public class Profile implements Iterable<Contact>
         return phoneNumber;
     }
 
-    /*
+    /**
      * Returns an iterator over the contacts in the profile
      * 
      * @return Iterator<Contact> The iterator over the contacts

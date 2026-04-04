@@ -1,3 +1,8 @@
+/**
+ * ContactProfilePage class represents the profile page of a contact in the messenger application. It displays the contact's phone number, profile picture, and recent messages received from that contact.
+ * 
+ * @author Calum Davies
+ */
 package datastructProject;
 
 import javax.swing.*;
@@ -10,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 
-public class ContactProfilePage extends JPanel {
-
+public class ContactProfilePage extends JPanel 
+{
     private final JLabel phoneLabel = new JLabel();
     private final JLabel profilePicLabel = new JLabel();
     private final JPanel recentMessagesPanel = new JPanel();
@@ -20,7 +25,17 @@ public class ContactProfilePage extends JPanel {
     private ChatManager chatManager;
     private String currentUserPhone;
 
-    public ContactProfilePage(Profile profile, ChatManager chatManager, String currentUserPhone, Runnable onBack) {
+    // ### CONSTRUCTOR ### //
+    /*
+     * Overloaded constructor for creating a ContactProfilePage instance.
+     *
+     * @param profile The profile of the user.
+     * @param chatManager The chat manager for handling chat operations.
+     * @param currentUserPhone The phone number of the current user.
+     * @param onBack The action to perform when navigating back.
+     */
+    public ContactProfilePage(Profile profile, ChatManager chatManager, String currentUserPhone, Runnable onBack) 
+    {
         this.profile = profile;
         this.chatManager = chatManager;
         this.currentUserPhone = currentUserPhone;

@@ -23,6 +23,12 @@ public class Menu
     private Profile testProfile2 = new Profile("Daniel","123","", userRegistry);
     private Profile testProfile3 = new Profile("CalumS","456","", userRegistry);
     
+    // ### CONSTRUCTOR ### //
+    /**
+     * Overloaded constructor for creating a Menu instance.
+     *
+     * @throws IOException If there is an error loading resources.
+     */
     public Menu() throws IOException 
     {
         frame = new JFrame("Text");
@@ -100,7 +106,7 @@ public class Menu
         frame.add(containerPanel, BorderLayout.CENTER);
     }
 
-    /*
+    /**
      * Displays the main menu frame
      */
     public void show() 

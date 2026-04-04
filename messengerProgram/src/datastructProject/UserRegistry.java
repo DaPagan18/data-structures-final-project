@@ -13,7 +13,7 @@ public class UserRegistry
     // HashMap to store user profiles, with the phone number as the key for quick lookup
     private final HashMap<String, Profile> profilesByPhoneNumber = new HashMap<>();
 
-    /*
+    /**
      * Adds a profile to the user registry
      * 
      * @param profile The profile to be added
@@ -23,7 +23,7 @@ public class UserRegistry
         profilesByPhoneNumber.put(profile.getPhoneNumber(), profile);
     }
 
-    /*
+    /**
      * Looks up a profile by phone number
      * 
      * @param phoneNumber The phone number of the profile to look up
@@ -34,7 +34,7 @@ public class UserRegistry
         return profilesByPhoneNumber.containsKey(phoneNumber);
     }
 
-    /*
+    /**
      * Gets a profile by phone number
      * 
      * @param phoneNumber The phone number of the profile to get
@@ -44,5 +44,4 @@ public class UserRegistry
     {
         return profilesByPhoneNumber.get(phoneNumber);
     }
-
 }
