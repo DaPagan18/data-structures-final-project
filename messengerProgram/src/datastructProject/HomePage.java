@@ -1,3 +1,8 @@
+/**
+ * HomePage class 
+ * 
+ * @author Stuart Baxter
+ */
 package datastructProject;
 
 import java.awt.*;
@@ -6,11 +11,13 @@ import java.awt.event.ComponentEvent;
 import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 
-public class HomePage extends JPanel {
+public class HomePage extends JPanel 
+{
     private final ChatManager chatManager;
     private final JPanel chatsListPanel;
 
-    public HomePage(ChatManager chatManager) {
+    public HomePage(ChatManager chatManager) 
+    {
         this.chatManager = chatManager;
         
         setLayout(new BorderLayout());
@@ -32,7 +39,8 @@ public class HomePage extends JPanel {
         loadChats();
 
         // Refresh whenever this panel becomes visible (e.g. navigating back from a chat)
-        addComponentListener(new ComponentAdapter() {
+        addComponentListener(new ComponentAdapter() 
+        {
             @Override
             public void componentShown(ComponentEvent e) {
                 loadChats();
@@ -40,25 +48,39 @@ public class HomePage extends JPanel {
         });
     }
 
-    private void loadChats() {
+    /*
+     * Private method to load the list of chats into the home page
+     */
+    private void loadChats() 
+    {
         chatsListPanel.removeAll();
         
-        for (Chat chat : chatManager.getChatsList()) {
-            JPanel chatPanel = createChatPanel(chat);
-            chatsListPanel.add(chatPanel);
-            chatsListPanel.add(Box.createVerticalStrut(10));
-        }
+        // Iterate through the list of chats and create a panel for each one
+        for (Chat chat : chatManager.getChatsList())
+            {
+                JPanel chatPanel = createChatPanel(chat);
+                chatsListPanel.add(chatPanel);
+                chatsListPanel.add(Box.createVerticalStrut(10));
+            }
         
         chatsListPanel.add(Box.createVerticalGlue());
         chatsListPanel.revalidate();
         chatsListPanel.repaint();
     }
 
-    public void refresh() {
+    /*
+     * Refreshes the list of chats on the home page
+     */
+    public void refresh() 
+    {
         loadChats();
     }
 
-    private JPanel createChatPanel(Chat chat) {
+    /*
+     * Creates a panel for a specific chat
+     */
+    private JPanel createChatPanel(Chat chat) 
+    {
         JPanel chatPanel = new JPanel(new BorderLayout());
         chatPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         chatPanel.setBackground(new Color(245, 245, 245));
@@ -74,27 +96,29 @@ public class HomePage extends JPanel {
         boolean hasUnread = !chatManager.getUnreadMessages(chat.getId()).isEmpty();
         JLabel nameLabel = new JLabel(chat.getContactName() + (hasUnread ? " (Unread)" : ""));
         nameLabel.setFont(new Font("Sans Serif", Font.BOLD, 14));
-        if (hasUnread) {
-            nameLabel.setForeground(new Color(0, 100, 200));
-        }
+        if (hasUnread) 
+            {
+                nameLabel.setForeground(new Color(0, 100, 200));
+            }
         infoPanel.add(nameLabel);
         
         Message lastMessage = chat.getLastMessage();
-        if (lastMessage != null) {
-            String preview = lastMessage.getMessageContent().length() > 50 
-                ? lastMessage.getMessageContent().substring(0, 50) + "..." 
-                : lastMessage.getMessageContent();
-            JLabel previewLabel = new JLabel(preview);
-            previewLabel.setFont(new Font("Sans Serif", Font.PLAIN, 11));
-            previewLabel.setForeground(Color.GRAY);
-            infoPanel.add(previewLabel);
+        if (lastMessage != null) 
+            {
+                String preview = lastMessage.getMessageContent().length() > 50 
+                    ? lastMessage.getMessageContent().substring(0, 50) + "..." 
+                    : lastMessage.getMessageContent();
+                JLabel previewLabel = new JLabel(preview);
+                previewLabel.setFont(new Font("Sans Serif", Font.PLAIN, 11));
+                previewLabel.setForeground(Color.GRAY);
+                infoPanel.add(previewLabel);
             
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-            JLabel timeLabel = new JLabel(lastMessage.getTimeSent().format(formatter));
-            timeLabel.setFont(new Font("Sans Serif", Font.ITALIC, 10));
-            timeLabel.setForeground(Color.GRAY);
-            infoPanel.add(timeLabel);
-        }
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                JLabel timeLabel = new JLabel(lastMessage.getTimeSent().format(formatter));
+                timeLabel.setFont(new Font("Sans Serif", Font.ITALIC, 10));
+                timeLabel.setForeground(Color.GRAY);
+                infoPanel.add(timeLabel);
+            }
         
         // Middle: click area
         JButton openButton = new JButton("Open");
@@ -110,10 +134,11 @@ public class HomePage extends JPanel {
                 "Confirm Delete",
                 JOptionPane.YES_NO_OPTION
             );
-            if (confirm == JOptionPane.YES_OPTION) {
-                chatManager.deleteChat(chat.getId());
-                loadChats();
-            }
+            if (confirm == JOptionPane.YES_OPTION) 
+                {
+                    chatManager.deleteChat(chat.getId());
+                    loadChats();
+                }
         });
         
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
