@@ -10,7 +10,6 @@ public class Contact
     private String name;
     private String phoneNumber;
     private String profilePicPath;
-    private String lastActive;
     private UserRegistry userRegistry;
 
     // ### CONSTRUCTORS ### //
@@ -22,7 +21,6 @@ public class Contact
         name = "";
         phoneNumber = "";
         profilePicPath = "";
-        lastActive = "";
     }
 
     /**
@@ -36,7 +34,6 @@ public class Contact
         this.phoneNumber = phoneNumber;
         this.profilePicPath = profilePicPath;
         this.name = setName();
-        this.lastActive = "";
     }
 
     /**
@@ -51,7 +48,6 @@ public class Contact
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.profilePicPath = profilePicPath;
-        this.lastActive = "";
     }
 
     // ### GETTERS AND SETTERS ### //
@@ -118,23 +114,4 @@ public class Contact
         this.profilePicPath = profilePicPath;
     }
 
-    /**
-     * Set the last active time of the contact
-     * 
-     * @param lastActive The time the contact was last active
-     */
-    public void setLastActive(String lastActive)
-    {
-        this.lastActive = lastActive;
-    }
-
-    /**
-     * Get the last active time of the contact
-     * 
-     * @return lastActive The time the contact was last active
-     */
-    public String getLastActive()
-    {
-        return lastActive;
-    }
 }
