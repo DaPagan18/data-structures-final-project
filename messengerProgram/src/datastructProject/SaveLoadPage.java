@@ -1,7 +1,7 @@
-/*
+/**
  * Class to handle the saving and loading of the messenger programme.
  *
- * @author: Calum Sinclair
+ * @author Calum Sinclair
  */
 
 package datastructProject;
