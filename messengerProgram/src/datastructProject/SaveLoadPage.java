@@ -1,3 +1,9 @@
+/*
+ * Class to handle the saving and loading of the messenger programme.
+ *
+ * @author: Calum Sinclair
+ */
+
 package datastructProject;
 
 import java.io.FileOutputStream;
@@ -12,8 +18,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 
-public class SaveLoadPage extends JPanel {
-
+public class SaveLoadPage extends JPanel 
+{
     // UI components
     private final JLabel title = new JLabel("Save/Load");
     private JPanel buttonBar;
@@ -57,7 +63,10 @@ public class SaveLoadPage extends JPanel {
     /*
      * Method to save the profile and all its data to a text file
      * Creates a new text file with the name "profile_[profile name].txt" 
-     * Writes the profile information, contacts, and chats to the file in a structured format  
+     * Writes the profile information, iterates and writes the profiles' contacts and chats to the file in a structured format  
+     */
+    /**
+     * 
      */
     private void saveProfile() 
     {
@@ -67,16 +76,19 @@ public class SaveLoadPage extends JPanel {
 
         // Couunter to differentiate between contacts and chats when writing to the file
         int contactNum = 0;
+        int chatNum = 0;
 
         try {
             outputStream = new FileOutputStream("profile_[ " + profile.getName() + "].txt");
             printWriter = new PrintWriter(outputStream);
 
+            // Write the profile information to the file in a structured format
             printWriter.println("[PROFILE]");
             printWriter.println("Name:" + profile.getName());
             printWriter.println("Phone Number:" + profile.getPhoneNumber());
             printWriter.println("Profile Picture Path:" + profile.getProfilePicPath());
 
+            // Write the contacts information to the file in a structured format
             printWriter.println("[CONTACTS]");
             // Iterate through the profile's contacts and write their information to the file
             for (Contact contact : profile) {
@@ -84,11 +96,13 @@ public class SaveLoadPage extends JPanel {
                 printWriter.println("Name:" + contact.getName());
                 printWriter.println("Phone Number:" + contact.getPhoneNumber());
                 printWriter.println("Profile Picture Path:" + contact.getProfilePicPath());
+                // Increment the contact number counter for the next contact
                 contactNum++;
             }
 
+            // Write the chats information to the file in a structured format
             printWriter.println("[CHATS]");
-            int chatNum = 0;
+            // Iterate through the chat manager's chats and write their information to the file
             for (Chat chat : NavigationManager.getInstance().getChatManager()) {
                 printWriter.println("Chat:" + (chatNum));
                 printWriter.println("ID:" + chat.getId());
@@ -96,6 +110,7 @@ public class SaveLoadPage extends JPanel {
                 printWriter.println("Participant 2:" + chat.getParticipant2PhoneNumber());
                 printWriter.println("Time Sent:" + chat.getTimeSent());
                 printWriter.println("Messages:");
+                // Iterate through the chat's messages and write their information to the file
                 for (Message message : chat.getMessages()) {
                     printWriter.println("Message ID:" + message.getId());
                     printWriter.println("From:" + message.getFrom());
@@ -104,12 +119,15 @@ public class SaveLoadPage extends JPanel {
                     printWriter.println("Read:" + message.isRead());
                     printWriter.println("Liked:" + message.isLiked());
                 }
+                // Increment the chat number counter for the next chat
                 chatNum++;
             }
         } catch (Exception e) 
         {
-            System.out.println("Sorry, there has been a problem opening or writing to the file");
-            System.out.println("/t" + e);
+            // Display an error message if there was a problem saving the file
+            JOptionPane.showMessageDialog(this, "Error saving profile: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            // Print the stack trace for debugging purposes
+            e.printStackTrace();
         } finally 
         {
             if (printWriter != null)
@@ -118,104 +136,150 @@ public class SaveLoadPage extends JPanel {
         JOptionPane.showMessageDialog(this, "Profile saved successfully!");
     }
 
-    private void loadProfileFromFile(File file) {
+    /*
+     * Loads a user profile from a file
+     * Parses the file line by line to extract the profile information, contacts and chats based on the structured format used when saving the file
+     *
+     * @param file The file which contains the profile data to be loaded
+     */
+    private void loadProfileFromFile(File file) 
+    {
+        // Create a buffered reader to read the file 
         BufferedReader reader = null;
         try {
+            // Initialise the buffered reader with the selected file
             reader = new BufferedReader(new FileReader(file));
             String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.equals("[PROFILE]")) {
-                    profile.setName(reader.readLine().split(":", 2)[1]);
-                    profile.setPhoneNumber(reader.readLine().split(":", 2)[1]);
-                    profile.setProfilePicPath(reader.readLine().split(":", 2)[1]);
-                    userRegistry.addProfile(profile);
-                    NavigationManager.getInstance().storeUserRegistry(userRegistry, profile.getPhoneNumber());
-                } 
+           
+            // While loop to read the file line by line and parse the profile, contacts and chats information based on the structured format used when saving the file
+            while ((line = reader.readLine()) != null) 
+                {
+                    if (line.equals("[PROFILE]")) 
+                        {
+                            // Read the next line after "[PROFILE]" heading 
+                            profile.setName(reader.readLine().split(":", 2)[1]);
+                            profile.setPhoneNumber(reader.readLine().split(":", 2)[1]);
+                            profile.setProfilePicPath(reader.readLine().split(":", 2)[1]);
+                            // Add the loaded profile to the user registry
+                            userRegistry.addProfile(profile);
+                            // Store the user registry in the navigation manager for access by other pages
+                            NavigationManager.getInstance().storeUserRegistry(userRegistry, profile.getPhoneNumber());
+                        } 
                 
-                else if (line.equals("[CONTACTS]")) {
-                    profile.getAllContacts().clear();
-                    while ((line = reader.readLine()) != null && !line.equals("[CHATS]")) {
-                        if (line.startsWith("Contact :")) {
-                            String name = reader.readLine().split(":", 2)[1];
-                            String phone = reader.readLine().split(":", 2)[1];
-                            String pic = reader.readLine().split(":", 2)[1];
-                            contact = new Contact(name, phone, pic);
-                            profile.addContact(contact);
-                            if (!userRegistry.lookup(phone)) {
-                                new Profile(name, phone, pic, userRegistry);
-                            }
-                        }
-                    }
-                    // contacts loop consumed the "[CHATS]" line, fall through to handle it
-                } 
-                
-                if (line != null && line.equals("[CHATS]")) {
-                    NavigationManager.getInstance().getChatManager().getAllChats().clear();
-                    line = reader.readLine(); // prime the loop
-                    while (line != null) {
-                        if (line.startsWith("Chat:")) {
-                            reader.readLine(); // skip "ID:..." line
-                            String participant1 = reader.readLine().split(":", 2)[1];
-                            String participant2 = reader.readLine().split(":", 2)[1];
-                            String nextLine = reader.readLine();
-                            LocalDateTime chatTimeSent;
-                            if (nextLine.startsWith("Time Sent:")) {
-                                chatTimeSent = LocalDateTime.parse(nextLine.split(":", 2)[1]);
-                                reader.readLine(); // Skip "Messages:" line
-                            } else {
-                                chatTimeSent = LocalDateTime.now();
-                                // nextLine is "Messages:", already read, no skip
-                            }
-                            chat = new Chat(chatTimeSent, participant1, participant2);
-                            NavigationManager.getInstance().getChatManager().addChat(chat);
-                            line = reader.readLine(); // prime the message loop
-                            while (line != null && !line.startsWith("Chat:")) {
-                                if (line.startsWith("Message ID:")) {
-                                    String messageId = line.split(":", 2)[1];
-                                    String from = reader.readLine().split(":", 2)[1];
-                                    String content = reader.readLine().split(":", 2)[1];
-                                    LocalDateTime time = LocalDateTime.parse(reader.readLine().split(":", 2)[1]);
-                                    boolean read = Boolean.parseBoolean(reader.readLine().split(":", 2)[1]);
-                                    boolean liked = Boolean.parseBoolean(reader.readLine().split(":", 2)[1]);
-
-                                    Message message = new Message(messageId, chat.getId(), from, content, time);
-                                    message.setRead(read);
-                                    message.setLiked(liked);
-                                    chat.addMessage(message);
+                    else if (line.equals("[CONTACTS]")) 
+                        {
+                            // Clear the profile's current contacts before loading the new ones from the file
+                            profile.getAllContacts().clear();
+                            // While loop to read the contacts information until the next heading is reached
+                            while ((line = reader.readLine()) != null && !line.equals("[CHATS]")) 
+                                {
+                                    if (line.startsWith("Contact :")) 
+                                        {
+                                            // Read the contact information and store data in variables
+                                            String name = reader.readLine().split(":", 2)[1];
+                                            String phone = reader.readLine().split(":", 2)[1];
+                                            String pic = reader.readLine().split(":", 2)[1];
+                                            // Create a new contact with the loaded information
+                                            contact = new Contact(name, phone, pic);
+                                            // Add the contact to the profile
+                                            profile.addContact(contact);
+                                    // Check if the contact's phone number is not already in the user registry
+                                    if (!userRegistry.lookup(phone)) 
+                                        {
+                                            // If not, create a new profile for the contact and add it to the user registry
+                                            new Profile(name, phone, pic, userRegistry);
+                                        }
+                                        }
                                 }
-                                line = reader.readLine();
+                } 
+                
+                if (line != null && line.equals("[CHATS]")) 
+                    {
+                        // Clear the chat manager's current chats before loading the new ones from the file
+                        NavigationManager.getInstance().getChatManager().getAllChats().clear();
+                        line = reader.readLine(); // prime the loop
+                        // While loop to read the chats information until the end of the file is reached
+                        while (line != null) 
+                            {
+                                if (line.startsWith("Chat:")) 
+                                    {
+                                        reader.readLine(); // skip "ID:..." line
+                                        String participant1 = reader.readLine().split(":", 2)[1];
+                                        String participant2 = reader.readLine().split(":", 2)[1];
+                                        String nextLine = reader.readLine();
+                                        LocalDateTime chatTimeSent;
+                                        // If statement to check if the next line is "Time Sent:" or "Messages:" to correctly parse the data
+                                        if (nextLine.startsWith("Time Sent:")) 
+                                            {
+                                                chatTimeSent = LocalDateTime.parse(nextLine.split(":", 2)[1]);
+                                                reader.readLine(); // Skip "Messages:" line
+                                            } else 
+                                            {
+                                                    chatTimeSent = LocalDateTime.now();
+                                                    // nextLine is "Messages:", already read, no skip
+                                            }
+                                        // Create a new chat with the loaded information 
+                                        chat = new Chat(chatTimeSent, participant1, participant2);
+                                        // Add the chat to the chat manager
+                                        NavigationManager.getInstance().getChatManager().addChat(chat);
+                                        line = reader.readLine(); // prime the message loop
+                                        while (line != null && !line.startsWith("Chat:")) 
+                                            {
+                                                if (line.startsWith("Message ID:")) 
+                                                    {
+                                                        // Read the message information and store data in variables
+                                                        String messageId = line.split(":", 2)[1];
+                                                        String from = reader.readLine().split(":", 2)[1];
+                                                        String content = reader.readLine().split(":", 2)[1];
+                                                        LocalDateTime time = LocalDateTime.parse(reader.readLine().split(":", 2)[1]);
+                                                        boolean read = Boolean.parseBoolean(reader.readLine().split(":", 2)[1]);
+                                                        boolean liked = Boolean.parseBoolean(reader.readLine().split(":", 2)[1]);
+                                                        // Create a new message with the loaded information and add it to the chat
+                                                        Message message = new Message(messageId, chat.getId(), from, content, time);
+                                                        message.setRead(read);
+                                                        message.setLiked(liked);
+                                                        chat.addMessage(message);
+                                                    }
+                                                line = reader.readLine();
+                                            }
+                                } else {
+                                    line = reader.readLine();
+                                }
                             }
-                            // line is now null (EOF) or the next "Chat:" line — outer loop handles both correctly
-                        } else {
-                            line = reader.readLine();
-                        }
                     }
                 }
-            }
+            // Display a success message after loading the profile and its data successfully
             JOptionPane.showMessageDialog(this, "Profile loaded successfully!");
-            // Register chat pages for loaded chats
             ChatManager cm = NavigationManager.getInstance().getChatManager();
-            for (Chat c : cm) {
-                ChatPage chatPage = new ChatPage(c, cm);
-                NavigationManager.getInstance().registerPage(chatPage, "Chat_" + c.getId());
-            }
+            // Iterate through the chat manager's chats
+            for (Chat c : cm) 
+                {
+                    // For each chat create a new chat page and register it with the navigation manager
+                    ChatPage chatPage = new ChatPage(c, cm);
+                    // Use the chat's ID to create a unique page name for each chat page when registering with the navigation manager
+                    NavigationManager.getInstance().registerPage(chatPage, "Chat_" + c.getId());
+                }
+            // After loading the profile and its data, navigate back to the home page
             NavigationManager.getInstance().navigateTo("Home");
         }catch (FileNotFoundException e)
 		{
+            // Display an error message if the selected file was not found
 		    JOptionPane.showMessageDialog(this, "File not found: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		} 
         catch (Exception e) 
         {
+            // Display an error message if there was a problem loading the file
             JOptionPane.showMessageDialog(this, "Error loading profile: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         } finally 
         {
             try {
                 if (reader != null) {
-                    reader.close();
+                    reader.close(); // close the file
                 }
             } catch (IOException e) 
             {
+                // Display an error message if there was a problem closing the file
                 JOptionPane.showMessageDialog(this, "Error closing file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
