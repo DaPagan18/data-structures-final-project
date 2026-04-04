@@ -1,26 +1,30 @@
+/**
+ * Class that creates and handles the main menu of the messenger program
+ * 
+ * @author Stuart Baxter
+ */
 package datastructProject;
 
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.*;
 
-public class Menu {
+public class Menu 
+{
     private final JFrame frame;
     private final ChatManager chatManager;
     private CardLayout cards;
 
-    //probably going to need something here that loads the profile from the file
     private final UserRegistry userRegistry = new UserRegistry();
     private Profile profile = new Profile(userRegistry);
     
-    //adding a test profile to the user registry to simulate another user being on the system
+    // Adding test profiles to the user registry to simulate another user being on the system
     private Profile testProfile = new Profile("Calum", "075", "messengerProgram/src/datastructProject/images/calumProfilePic.png", userRegistry);
     private Profile testProfile2 = new Profile("Daniel","123","", userRegistry);
     private Profile testProfile3 = new Profile("CalumS","456","", userRegistry);
     
-    public Menu() throws IOException {
-
-        
+    public Menu() throws IOException 
+    {
         frame = new JFrame("Text");
 
         frame.setSize(1000, 1000);
@@ -38,8 +42,7 @@ public class Menu {
         // Create ChatManager
         this.chatManager = new ChatManager();
 
-     
-        // dropdown menu options
+        // Dropdown menu options
         String[] pages = {"Home", "Contacts", "Search", "Edit Profile", "Save/Load"};
         JComboBox<String> dropdown = new JComboBox<>(pages);
 
@@ -68,20 +71,22 @@ public class Menu {
         NavigationManager.getInstance().registerPage(editProfilePanel, "Edit Profile");
         NavigationManager.getInstance().registerPage(savePanel, "Save/Load");
 
-        // Add chat pages dynamically
-        for (Chat chat : chatManager.getChatsList()) {
-            ChatPage chatPage = new ChatPage(chat, chatManager);
-            NavigationManager.getInstance().registerPage(chatPage, "Chat_" + chat.getId());
-        }
+        // Add chat pages dynamically by iterating through the chats in the ChatManager
+        for (Chat chat : chatManager.getChatsList()) 
+            {
+                ChatPage chatPage = new ChatPage(chat, chatManager);
+                NavigationManager.getInstance().registerPage(chatPage, "Chat_" + chat.getId());
+            }
 
         dropdown.addActionListener(e -> {
             String selected = (String) dropdown.getSelectedItem();
-            if (selected != null) {
-                NavigationManager.getInstance().navigateTo(selected);
-            }
+            if (selected != null) 
+                {
+                    NavigationManager.getInstance().navigateTo(selected);
+                }
         });
 
-        // container panel that is moved down a bit
+        // Container panel that is moved down a bit
         JPanel containerPanel = new JPanel(new BorderLayout());
         containerPanel.add(Box.createVerticalStrut(20), BorderLayout.NORTH);
         
@@ -95,12 +100,17 @@ public class Menu {
         frame.add(containerPanel, BorderLayout.CENTER);
     }
 
-
-    public void show() {
+    /*
+     * Displays the main menu frame
+     */
+    public void show() 
+    {
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) throws IOException {
+    // ### MAIN METHOD TO LAUNCH THE PROGRAM ### // 
+    public static void main(String[] args) throws IOException 
+    {
         Menu menu = new Menu();
         menu.show();
     }
