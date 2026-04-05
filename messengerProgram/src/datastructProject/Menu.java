@@ -25,7 +25,7 @@ public class Menu
     
     // ### CONSTRUCTOR ### //
     /**
-     * Overloaded constructor for creating a Menu instance.
+     * constructor for creating a Menu instance.
      *
      * @throws IOException If there is an error loading resources.
      */

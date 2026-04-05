@@ -29,7 +29,7 @@ public class ContactsPage extends JPanel
 
     // ### CONSTRUCTOR ### //
     /**
-     * Overloaded constructor for creating a ContactsPage instance.
+     * constructor for creating a ContactsPage instance.
      *
      * @param profile The profile of the user.
      * @param userRegistry The user registry for managing user information.

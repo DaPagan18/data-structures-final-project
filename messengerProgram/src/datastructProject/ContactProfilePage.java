@@ -28,7 +28,7 @@ public class ContactProfilePage extends JPanel
 
     // ### CONSTRUCTOR ### //
     /**
-     * Overloaded constructor for creating a ContactProfilePage instance.
+     * constructor for creating a ContactProfilePage instance.
      *
      * @param profile The profile of the user.
      * @param chatManager The chat manager for handling chat operations.

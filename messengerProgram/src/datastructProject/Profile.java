@@ -31,7 +31,7 @@ public class Profile implements Iterable<Contact>
     }
 
     /**
-     * Overloaded constructor for creating a Profile instance with specified name and profile picture path
+     * constructor for creating a Profile instance with specified name and profile picture path
      * Generates a unique phone number and adds it to the user registry.
      * 
      * @param name The name of the profile

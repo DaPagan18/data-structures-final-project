@@ -29,7 +29,7 @@ public class EditProfilePage extends JPanel
 
     // ### CONSTRUCTOR ### //
     /**
-     * Overloaded constructor for creating an EditProfilePage instance.
+     * constructor for creating an EditProfilePage instance.
      *
      * @param profile The profile of the user.
      */

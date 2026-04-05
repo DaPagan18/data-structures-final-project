@@ -34,7 +34,7 @@ public class Message
     }
 
     /**
-     * Overloaded constructor for creating a new Message instance with specified values
+     * constructor for creating a new Message instance with specified values
      * 
      * @param id Unique identifier for the message
      * @param chatId Identifier for the chat this message belongs to   

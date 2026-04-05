@@ -24,7 +24,7 @@ public class Contact
     }
 
     /**
-     * Overloaded constructor for creating a Contact instance with specified phone number and profile picture path
+     * constructor for creating a Contact instance with specified phone number and profile picture path
      * 
      * @param phoneNumber The phone number of the contact
      * @param profilePicPath The path to the contact's profile picture
@@ -37,7 +37,7 @@ public class Contact
     }
 
     /**
-     *  Another Overloaded constructor used for loading contacts from a save file. 
+     *  constructor used for loading contacts from a save file. 
      *
      * @param name The name of the contact
      * @param phoneNumber The phone number of the contact

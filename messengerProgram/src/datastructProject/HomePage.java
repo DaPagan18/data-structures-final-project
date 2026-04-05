@@ -18,7 +18,7 @@ public class HomePage extends JPanel
 
     /// ### CONSTRUCTOR ### //
     /**
-     * Overloaded constructor for creating a HomePage instance.
+     * constructor for creating a HomePage instance.
      *
      * @param chatManager The chat manager for handling chat operations.
      */
